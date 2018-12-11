@@ -1,7 +1,11 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory: { memory: ~ }
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\Customer
+                property: username
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -28,3 +32,6 @@ security:
             # argon2i is more secure, but requires PHP 7.2 or the Sodium extension
             algorithm: argon2i
             cost: 12
+        App\Entity\Customer:
+            algorithm: argon2i
+
