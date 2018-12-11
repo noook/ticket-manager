@@ -5,9 +5,9 @@ namespace App\DataFixtures;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use App\Entity\Customer;
+use App\Entity\User;
 
-class CustomerFixtures extends Fixture
+class UserFixtures extends Fixture
 {
     private $passwordEncoder;
 
@@ -18,11 +18,11 @@ class CustomerFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $customer = new Customer();
-        $customer->setUsername('nook');
-        $customer->setEmail('me@neilrichter.com');
-        $customer->setPassword('$argon2i$v=19$m=1024,t=2,p=2$VHE1MVJNRVA5dko0SXlONw$Qz36my1Nyje+tggd4ufPXWmbaR/pjde796F8Oz3r2G0');
-        $manager->persist($customer);
+        $user = new User();
+        $user->setUsername('nook');
+        $user->setEmail('me@neilrichter.com');
+        $user->setPassword('$argon2i$v=19$m=1024,t=2,p=2$VHE1MVJNRVA5dko0SXlONw$Qz36my1Nyje+tggd4ufPXWmbaR/pjde796F8Oz3r2G0');
+        $manager->persist($user);
         $manager->flush();
     }
 }
