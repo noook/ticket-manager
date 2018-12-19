@@ -36,4 +36,17 @@ class SecurityController extends AbstractController
             'user' => $user->repr(),
         ]);
     }
+
+    /**
+     * @Route("/login", name="login")
+     */
+    public function login(Request $request)
+    {
+        $user = $this->getUser();
+
+        return $this->json([
+            'username' => $user->getUsername(),
+            'roles' => $user->getRoles(),
+        ]);
+    }
 }

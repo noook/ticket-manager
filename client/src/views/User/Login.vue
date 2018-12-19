@@ -1,5 +1,5 @@
 <template>
-  <div class="register">
+  <div class="login">
     <form class="container w-25" @submit.prevent="register">
       <div class="form-group">
         <label for="username">Username</label>
@@ -12,16 +12,6 @@
           placeholder="Username">
       </div>
       <div class="form-group">
-        <label for="email-adress">Email address</label>
-        <input
-          type="email"
-          class="form-control"
-          v-model="form.email"
-          name="email"
-          id="email-adress"
-          placeholder="Enter email">
-      </div>
-      <div class="form-group">
         <label for="user-password">Password</label>
         <input
           type="password"
@@ -30,16 +20,6 @@
           name="password"
           id="user-password"
           placeholder="Password">
-      </div>
-      <div class="form-group">
-        <label for="user-password-confirmation">Password confirmation</label>
-        <input
-          type="password"
-          class="form-control"
-          v-model="form.passwordConfirmation"
-          name="password-confirmation"
-          id="user-password-confirmation"
-          placeholder="Confirm password">
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
@@ -50,7 +30,7 @@
 import axios from 'axios';
 
 export default {
-  name: 'register',
+  name: 'Login',
   data() {
     return {
       form: {
@@ -63,11 +43,9 @@ export default {
   },
   methods: {
     register() {
-      // console.log(this.$store);
-      const { username, email, password } = this.form;
-      axios.post('https://ticket-manager.ml/register', {
+      const { username, password } = this.form;
+      axios.post('https://ticket-manager.ml/login', {
         username,
-        email,
         password,
       })
       .then(({ data }) => console.log(data)) // eslint-disable-line
@@ -79,7 +57,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.register {
+.login {
   .form-group {
     display: flex;
     flex-direction: column;

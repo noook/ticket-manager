@@ -1,9 +1,6 @@
 module.exports = {
   assetsDir: 'assets',
   lintOnSave: undefined,
-  devServer: {
-    proxy: 'https://ticket-manager.ml',
-  },
   css: {
     loaderOptions: {
       sass: {
