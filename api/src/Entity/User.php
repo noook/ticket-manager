@@ -53,6 +53,11 @@ class User implements UserInterface
      */
     private $tickets;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $apiToken;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -205,5 +210,17 @@ class User implements UserInterface
             'email' => $this->getEmail(),
             'roles' => $this->getRoles(),
         ];
+    }
+
+    public function getApiToken(): ?string
+    {
+        return $this->apiToken;
+    }
+
+    public function setApiToken(?string $apiToken): self
+    {
+        $this->apiToken = $apiToken;
+
+        return $this;
     }
 }
