@@ -84,17 +84,7 @@ export default {
 
 <style lang="scss" scoped>
 .register {
-  width: 100%;
-  height: 100vh;
-  background: linear-gradient(6deg, #d46763, #8766bc);
-  @include d-flex-centered(center);
-
   > form {
-    background-color: #fff;
-    border-radius: 5px;
-    padding: 50px;
-
-
     > h2 {
       font-size: 2rem;
       margin-bottom: 15px;

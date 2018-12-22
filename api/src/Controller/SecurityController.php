@@ -13,7 +13,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use App\Entity\User;
 use App\Security\UserProvider;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class SecurityController extends AbstractController
 {
