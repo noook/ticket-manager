@@ -1,52 +1,39 @@
 <template>
   <div class="register">
-    <form class="container w-25" @submit.prevent="register">
-      <div class="form-group">
-        <label for="username">Username</label>
+    <form @submit.prevent="register">
+      <h2>{{ translations.REGISTER }}</h2>
+      <div class="login-inputs">
         <input
           type="text"
-          class="form-control"
           v-model="form.username"
           name="username"
-          id="username"
-          placeholder="Username">
-      </div>
-      <div class="form-group">
-        <label for="email-adress">Email address</label>
+          :placeholder="translations.FORM_USERNAME">
+        <small v-if="registerError.username">{{ translations.ERROR_USERNAME_TAKEN }}</small>
         <input
           type="email"
-          class="form-control"
           v-model="form.email"
-          name="email"
-          id="email-adress"
-          placeholder="Enter email">
-      </div>
-      <div class="form-group">
-        <label for="user-password">Password</label>
+          name="username"
+          :placeholder="translations.FORM_EMAIL">
+        <small v-if="registerError.email">{{ translations.ERROR_EMAIL_TAKEN }}</small>
         <input
           type="password"
-          class="form-control"
           v-model="form.password"
           name="password"
-          id="user-password"
-          placeholder="Password">
-      </div>
-      <div class="form-group">
-        <label for="user-password-confirmation">Password confirmation</label>
+          :placeholder="translations.FORM_PASSWORD">
         <input
           type="password"
-          class="form-control"
           v-model="form.passwordConfirmation"
           name="password-confirmation"
-          id="user-password-confirmation"
-          placeholder="Confirm password">
+          :placeholder="translations.FORM_PASSWORD_REPEAT">
+        <small v-if="registerError.password">{{ translations.ERROR_PASSWORDS_NO_MATCH }}</small>
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="login-submit">{{ translations.REGISTER }}</button>
     </form>
   </div>
 </template>
 
 <script>
+/* eslint-disable no-restricted-syntax, guard-for-in */
 import axios from 'axios';
 
 export default {
@@ -54,36 +41,100 @@ export default {
   data() {
     return {
       form: {
-        username: 'neilrichter',
-        email: 'me@neilrichter.com',
-        password: 'azeazeaze',
-        passwordConfirmation: 'azeazeaze',
+        username: null,
+        email: null,
+        password: null,
+        passwordConfirmation: null,
+      },
+      registerError: {
+        username: false,
+        email: false,
+        password: false,
       },
     };
   },
   methods: {
     register() {
-      // console.log(this.$store);
-      const { username, email, password } = this.form;
-      axios.post('https://ticket-manager.ml/register', {
+      for (const i in this.registerError) {
+        this.registerError[i] = false;
+      }
+      const {
         username,
         email,
         password,
+        passwordConfirmation,
+      } = this.form;
+
+      axios.post('http://ticket-manager.ml/register', {
+        username,
+        email,
+        password,
+        passwordConfirmation,
       })
-      .then(({ data }) => console.log(data)) // eslint-disable-line
-      .catch(err => console.log(err)); // eslint-disable-line
+        .then(({ data }) => console.log(data)) // eslint-disable-line
+        .catch((err) => {
+          for (const i in err.response.data.errors) {
+            this.registerError[i] = err.response.data.errors[i];
+          }
+        });
     },
   },
-  components: {},
 };
 </script>
 
 <style lang="scss" scoped>
 .register {
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(6deg, #d46763, #8766bc);
+  @include d-flex-centered(center);
+
+  > form {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 50px;
+
+
+    > h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    > .login-inputs {
+      display: flex;
+      flex-direction: column;
+      margin: 15px 0;
+
+      > input {
+        all: inherit;
+        border-radius: 20px;
+        background-color: #f5f5f5;
+        padding: 5px 20px;
+        margin: 5px 0;
+        text-align: left;
+      }
+
+      > small {
+        text-align: left;
+        color: #d91e18;
+        padding: 0 5px;
+      }
+    }
+
+    > .login-submit {
+      all: inherit;
+      background-color: #2ECC71;
+      box-sizing: border-box;
+      border-radius: 20px;
+      padding: 5px 20px;
+      color: #fff;
+      width: 100%;
+      font-weight: bold;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 }
 </style>

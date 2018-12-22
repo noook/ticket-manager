@@ -22,7 +22,7 @@ class UserFixtures extends Fixture
         $user->setUsername('nook');
         $user->setEmail('me@neilrichter.com');
         $user->setPassword('$argon2i$v=19$m=1024,t=2,p=2$VHE1MVJNRVA5dko0SXlONw$Qz36my1Nyje+tggd4ufPXWmbaR/pjde796F8Oz3r2G0');
-        $user->setApiToken(bin2hex(random_bytes(26)));
+        $user->setApiToken(bin2hex(random_bytes(50)));
         $manager->persist($user);
         $manager->flush();
     }

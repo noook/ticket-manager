@@ -1,29 +1,24 @@
 <template>
   <div class="login">
-    <form class="container w-25" @submit.prevent="login">
-      <div class="form-group">
-        <label for="username">Username</label>
+    <form @submit.prevent="login">
+      <h2>{{ translations.LOGIN }}</h2>
+      <div class="login-inputs">
         <input
           type="text"
-          class="form-control"
           v-model="form.username"
           name="username"
           id="username"
-          placeholder="Username">
-      </div>
-      <div class="form-group">
-        <label for="user-password">Password</label>
+          :placeholder="translations.FORM_USERNAME">
         <input
           type="password"
-          class="form-control"
           v-model="form.password"
           name="password"
           id="user-password"
-          placeholder="Password">
+          :placeholder="translations.FORM_PASSWORD">
+          <small v-if="loginError">{{ translations.INVALID_USERNAME_OR_PASSWORD }}</small>
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="login-submit">{{ translations.LOGIN }}</button>
     </form>
-    <button class="btn btn-primary my-2" @click="testConnexion">Test connection</button>
   </div>
 </template>
 
@@ -35,36 +30,26 @@ export default {
   data() {
     return {
       form: {
-        username: 'neilrichter',
-        email: 'me@neilrichter.com',
-        password: 'azeazeaze',
-        passwordConfirmation: 'azeazeaze',
+        username: null,
+        email: null,
+        password: null,
+        passwordConfirmation: null,
       },
+      loginError: false,
     };
   },
   methods: {
     async login() {
+      this.loginError = false;
       const { username, password } = this.form;
       const token = await axios.post('http://ticket-manager.ml/login', {
         username,
         password,
       })
         .then(({ data }) => data.token)
-        .catch(err => console.log(err.response.data)); // eslint-disable-line
+        .catch(() => { this.loginError = true; });
 
       this.$store.dispatch('setToken', token);
-    },
-    testConnexion() {
-      // debugger; // eslint-disable-line
-      const token = this.$store.state.AUTH_TOKEN;
-
-      return axios.get('http://ticket-manager.ml/test', {
-        headers: {
-          'X-AUTH-TOKEN': token,
-        },
-      })
-      .then(({ data }) => console.log(data)) // eslint-disable-line
-      .catch(err => console.log(err.response)); // eslint-disable-line
     },
   },
   components: {},
@@ -73,10 +58,57 @@ export default {
 
 <style lang="scss" scoped>
 .login {
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(6deg, #d46763, #8766bc);
+  @include d-flex-centered(center);
+
+  > form {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 50px;
+
+
+    > h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    > .login-inputs {
+      display: flex;
+      flex-direction: column;
+      margin: 15px 0;
+
+      > input {
+        all: inherit;
+        border-radius: 20px;
+        background-color: #f5f5f5;
+        padding: 5px 20px;
+        margin: 5px 0;
+        text-align: left;
+      }
+
+      > small {
+        text-align: left;
+        color: #d91e18;
+        padding: 0 5px;
+      }
+    }
+
+    > .login-submit {
+      all: inherit;
+      background-color: #2ECC71;
+      box-sizing: border-box;
+      border-radius: 20px;
+      padding: 5px 20px;
+      color: #fff;
+      width: 100%;
+      font-weight: bold;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 }
 </style>

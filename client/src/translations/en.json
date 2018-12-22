@@ -1,0 +1,12 @@
+{
+    "REGISTER": "Register",
+    "LOGIN": "Login",
+    "INVALID_USERNAME_OR_PASSWORD": "Invalid username or password",
+    "FORM_USERNAME": "Username",
+    "FORM_EMAIL": "Email",
+    "FORM_PASSWORD": "Password",
+    "FORM_PASSWORD_REPEAT": "Password repeat",
+    "ERROR_USERNAME_TAKEN": "Username already in use",
+    "ERROR_EMAIL_TAKEN": "Email already in use",
+    "ERROR_PASSWORDS_NO_MATCH": "Passwords do not match"
+}

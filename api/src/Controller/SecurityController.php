@@ -24,6 +24,32 @@ class SecurityController extends AbstractController
     {
         $data = $request->getContent();
         $data = json_decode($data, true);
+        $errors = [];
+        $userRepository = $this->getDoctrine()->getRepository(User::class);
+        
+        $checkUsername = $userRepository->findOneBy([
+            'username' => $data['username'],
+        ]);
+        if (!is_null($checkUsername)) {
+            $errors['username'] = true;
+        }
+
+        $checkEmail = $userRepository->findOneBy([
+            'email' => $data['email'],
+        ]);
+        if (!is_null($checkEmail)) {
+            $errors['email'] = true;
+        }
+
+        if ($data['password'] != $data['passwordConfirmation']) {
+            $errors['password'] = true;
+        }
+
+        if (count($errors) > 0) {
+            return $this->json([
+                'errors' => $errors,
+            ], 400);
+        }
 
         $user = new User();
         $user->setUsername($data['username']);
@@ -32,7 +58,9 @@ class SecurityController extends AbstractController
             $user,
             $data['password']
         ));
-        $user->setApiToken(bin2hex(random_bytes(26)));
+        $user->setApiToken(bin2hex(random_bytes(50)));
+        
+        $entityManager = $this->getDoctrine()->getManager();
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);
         $entityManager->flush();
@@ -53,6 +81,13 @@ class SecurityController extends AbstractController
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy([
             'username' => $data['username'],
         ]);
+
+
+        if (is_null($user)) {
+            return $this->json([
+                'message' => 'Invalid username or password',
+            ], 400);
+        }
 
         if ($passwordEncoder->isPasswordValid($user, $data['password'])) {
             return $this->json([
@@ -77,6 +112,18 @@ class SecurityController extends AbstractController
         return $this->json([
             'user' => $user->getUsername(),
             'roles' => $user->getRoles(),
+        ]);
+    }
+    /**
+     * @Route("/user/check", name="isLoggedIn")
+     */
+    public function isLoggedIn(Request $request, UserProvider $userProvider, TokenAuthenticator $authenticator)
+    {
+        $credentials = $authenticator->getCredentials($request);
+        $user = $authenticator->getUser($credentials, $userProvider);
+        var_dump($user);
+        return $this->json([
+            'username' => $user->getUsername(),
         ]);
     }
 }
