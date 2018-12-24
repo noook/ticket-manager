@@ -10,20 +10,32 @@ const debug = process.env.NODE_ENV !== 'production';
 export default new Vuex.Store({
   state: {
     AUTH_TOKEN: localStorage.getItem('AUTH_TOKEN') || null,
+    TOKEN_EXPIRACY: localStorage.getItem('TOKEN_EXPIRACY') || null,
   },
   mutations: {
-    SET_TOKEN(state, token) {
-      state.AUTH_TOKEN = token;
-      localStorage.setItem('AUTH_TOKEN', token);
+    SET_TOKEN(state, data) {
+      state.AUTH_TOKEN = data.token;
+      state.TOKEN_EXPIRACY = data.expiracy.date;
+      localStorage.setItem('AUTH_TOKEN', data.token);
+      localStorage.setItem('TOKEN_EXPIRACY', data.expiracy.date);
+    },
+    SET_USER(state, username) {
+      Vue.set(state, 'USER', username);
     },
     LOGOUT(state) {
-      delete state.AUTH_TOKEN;
+      Vue.delete(state, 'AUTH_TOKEN');
+      Vue.delete(state, 'TOKEN_EXPIRACY');
+      Vue.delete(state, 'USER');
       localStorage.removeItem('AUTH_TOKEN');
+      localStorage.removeItem('TOKEN_EXPIRACY');
     },
   },
   actions: {
-    setToken(context, token) {
-      context.commit('SET_TOKEN', token);
+    setToken(context, data) {
+      context.commit('SET_TOKEN', data);
+    },
+    setUser(context, data) {
+      context.commit('SET_USER', data);
     },
     logout(context) {
       context.commit('LOGOUT');

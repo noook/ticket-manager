@@ -58,6 +58,11 @@ class User implements UserInterface
      */
     private $apiToken;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $tokenExpiracy;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -220,6 +225,18 @@ class User implements UserInterface
     public function setApiToken(?string $apiToken): self
     {
         $this->apiToken = $apiToken;
+
+        return $this;
+    }
+
+    public function getTokenExpiracy(): ?\DateTimeInterface
+    {
+        return $this->tokenExpiracy;
+    }
+
+    public function setTokenExpiracy(\DateTimeInterface $tokenExpiracy): self
+    {
+        $this->tokenExpiracy = $tokenExpiracy;
 
         return $this;
     }

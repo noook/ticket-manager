@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -58,8 +59,8 @@ class SecurityController extends AbstractController
             $data['password']
         ));
         $user->setApiToken(bin2hex(random_bytes(50)));
-        
-        $entityManager = $this->getDoctrine()->getManager();
+        $now = new \DateTime();
+        $user->setTokenExpiracy($now->add(new \DateInterval('P1D')));
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);
         $entityManager->flush();
@@ -91,6 +92,7 @@ class SecurityController extends AbstractController
         if ($passwordEncoder->isPasswordValid($user, $data['password'])) {
             return $this->json([
                 'token' => $user->getApiToken(),
+                'expiracy' => $user->getTokenExpiracy(),
             ]);
         }
 
@@ -114,13 +116,16 @@ class SecurityController extends AbstractController
         ]);
     }
     /**
-     * @Route("/user/check", name="isLoggedIn")
+     * @Route("/user/check-connection", name="loggedInAs")
      */
-    public function isLoggedIn(Request $request, UserProvider $userProvider, TokenAuthenticator $authenticator)
+    public function loggedInAs(Request $request, UserProvider $userProvider, TokenAuthenticator $authenticator)
     {
         $credentials = $authenticator->getCredentials($request);
         $user = $authenticator->getUser($credentials, $userProvider);
-        var_dump($user);
+        if (is_null($user)) {
+            throw new AccessDeniedHttpException('Invalid token');
+        }
+
         return $this->json([
             'username' => $user->getUsername(),
         ]);

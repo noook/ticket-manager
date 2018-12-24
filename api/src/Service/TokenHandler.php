@@ -23,12 +23,14 @@ class TokenHandler {
         }
         $newToken = $this->generate();
         $user->setApiToken($newToken);
+        $now = new \DateTime();
+        $user->setTokenExpiracy($now->add(new \DateInterval('P1D')));
         $this->em->flush();
 
         return $newToken;
     }
 
-    private function generate(): String
+    public function generate(): String
     {
         $newToken = bin2hex(random_bytes(50));
         if (!$this->isAvailable($newToken)) {

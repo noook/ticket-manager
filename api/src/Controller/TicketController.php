@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -12,6 +13,7 @@ class TicketController extends AbstractController
 {
     /**
      * @Route("/ticket", name="ticket")
+     * @IsGranted("ROLE_USER")
      */
     public function index()
     {

@@ -1,13 +1,29 @@
 <template>
   <div class="navbar" :class="{'full-screen': fullscreen}">
-    <router-link to="/register">Register</router-link>
-    <router-link to="/login">Login</router-link>
+    <router-link v-if="!loggedAs" to="/register">Register</router-link>
+    <router-link v-if="!loggedAs" to="/login">Login</router-link>
+    <p v-if="loggedAs">{{ loggedAs }}</p>
+    <a @click="logout" v-if="loggedAs">{{ translations.LOGOUT }}</a>
   </div>
 </template>
 
 <script>
 export default {
+  methods: {
+    logout() {
+      this.$store.dispatch('logout');
+      this.$router.push({ name: 'login' });
+    },
+  },
   computed: {
+    loggedAs() {
+      const username = this.$store.state.USER || null;
+      // debugger; // eslint-disable-line;
+      if (!username) {
+        return false;
+      }
+      return this.translations.params('LOGGED_IN_AS', { username });
+    },
     fullscreen() {
       return ['register', 'login'].includes(this.$route.name);
     },

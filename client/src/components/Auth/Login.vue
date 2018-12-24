@@ -42,14 +42,15 @@ export default {
     async login() {
       this.loginError = false;
       const { username, password } = this.form;
-      const token = await axios.post('http://ticket-manager.ml/login', {
+      const { token, expiracy } = await axios.post('http://ticket-manager.ml/login', {
         username,
         password,
       })
-        .then(({ data }) => data.token)
+        .then(({ data }) => data)
         .catch(() => { this.loginError = true; });
 
-      this.$store.dispatch('setToken', token);
+      this.$store.dispatch('setToken', { token, expiracy });
+      this.$router.push('/');
     },
   },
   components: {},

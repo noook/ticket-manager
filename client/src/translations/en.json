@@ -8,5 +8,7 @@
     "FORM_PASSWORD_REPEAT": "Password repeat",
     "ERROR_USERNAME_TAKEN": "Username already in use",
     "ERROR_EMAIL_TAKEN": "Email already in use",
-    "ERROR_PASSWORDS_NO_MATCH": "Passwords do not match"
+    "ERROR_PASSWORDS_NO_MATCH": "Passwords do not match",
+    "LOGGED_IN_AS": "Logged is as {:username}",
+    "LOGOUT": "Logout"
 }
