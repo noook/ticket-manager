@@ -2,7 +2,7 @@
   <div class="tickets">
     <h1>{{ translations.MY_TICKETS }}</h1>
     <div class="ticket-list">
-      <table>
+      <table v-if="loaded">
         <thead>
           <td>{{ translations.TICKET_IDENTIFER }}</td>
           <td>{{ translations.TICKET_TITLE }}</td>
@@ -19,6 +19,7 @@
           <td>{{ item.updated | moment('DD-MM-YYYY') }}</td>
         </tr>
       </table>
+      <img src="@/assets/svg/loading.svg" alt="Loading" v-else>
     </div>
   </div>
 </template>
@@ -31,6 +32,7 @@ export default {
   data() {
     return {
       tickets: [],
+      loaded: false,
     };
   },
   created() {
@@ -41,6 +43,7 @@ export default {
           created: moment(ticket.created),
           updated: moment(ticket.updated),
         }));
+        this.loaded = true;
       })
       .catch(err => console.log(err)); // eslint-disable-line
   },
