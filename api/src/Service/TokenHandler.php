@@ -45,9 +45,4 @@ class TokenHandler {
             'apiToken' => $token
         ]);
     }
-
-    public function test()
-    {
-        return 300;
-    }
 }

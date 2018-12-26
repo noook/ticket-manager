@@ -2,7 +2,8 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home.vue';
 import Authentication from './views/Authentication.vue';
-import { checkConnexion } from './utils/mixins/api';
+import Tickets from './views/Tickets.vue';
+import { checkConnexion } from './utils/api';
 
 Vue.use(Router);
 
@@ -23,6 +24,11 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: Authentication,
+    },
+    {
+      path: '/tickets',
+      name: 'tickets',
+      component: Tickets,
     },
   ],
 });

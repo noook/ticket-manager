@@ -15,9 +15,9 @@ export default new Vuex.Store({
   mutations: {
     SET_TOKEN(state, data) {
       state.AUTH_TOKEN = data.token;
-      state.TOKEN_EXPIRACY = data.expiracy.date;
+      state.TOKEN_EXPIRACY = data.expiracy;
       localStorage.setItem('AUTH_TOKEN', data.token);
-      localStorage.setItem('TOKEN_EXPIRACY', data.expiracy.date);
+      localStorage.setItem('TOKEN_EXPIRACY', data.expiracy);
     },
     SET_USER(state, username) {
       Vue.set(state, 'USER', username);

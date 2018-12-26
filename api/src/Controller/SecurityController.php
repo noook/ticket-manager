@@ -8,9 +8,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
-use App\Security\TokenAuthenticator;
 use Symfony\Component\Security\Core\Security;   
 use Symfony\Component\Routing\Annotation\Route;
+use App\Security\TokenAuthenticator;
 
 use App\Entity\User;
 use App\Security\UserProvider;
@@ -92,7 +92,7 @@ class SecurityController extends AbstractController
         if ($passwordEncoder->isPasswordValid($user, $data['password'])) {
             return $this->json([
                 'token' => $user->getApiToken(),
-                'expiracy' => $user->getTokenExpiracy(),
+                'expiracy' => $user->getTokenExpiracy()->format('c'),
             ]);
         }
 
@@ -102,19 +102,6 @@ class SecurityController extends AbstractController
         
     }
 
-    /**
-     * @Route("/test", name="test")
-     */
-    public function test(Request $request, UserProvider $userProvider, TokenAuthenticator $authenticator)
-    {
-        $credentials = $authenticator->getCredentials($request);
-        $user = $authenticator->getUser($credentials, $userProvider);
-
-        return $this->json([
-            'user' => $user->getUsername(),
-            'roles' => $user->getRoles(),
-        ]);
-    }
     /**
      * @Route("/user/check-connection", name="loggedInAs")
      */

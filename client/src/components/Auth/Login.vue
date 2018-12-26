@@ -50,7 +50,7 @@ export default {
         .catch(() => { this.loginError = true; });
 
       this.$store.dispatch('setToken', { token, expiracy });
-      this.$router.push('/');
+      this.$router.push('/tickets');
     },
   },
   components: {},

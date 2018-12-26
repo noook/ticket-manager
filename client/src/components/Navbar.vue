@@ -1,7 +1,8 @@
 <template>
   <div class="navbar" :class="{'full-screen': fullscreen}">
-    <router-link v-if="!loggedAs" to="/register">Register</router-link>
-    <router-link v-if="!loggedAs" to="/login">Login</router-link>
+    <router-link v-if="!loggedAs" to="/register">{{ translations.REGISTER}}</router-link>
+    <router-link v-if="!loggedAs" to="/login">{{ translations.LOGIN }}</router-link>
+    <router-link v-if="loggedAs" to="/tickets">{{ translations.MY_TICKETS }}</router-link>
     <p v-if="loggedAs">{{ loggedAs }}</p>
     <a @click="logout" v-if="loggedAs">{{ translations.LOGOUT }}</a>
   </div>

@@ -10,5 +10,13 @@
     "ERROR_EMAIL_TAKEN": "Email already in use",
     "ERROR_PASSWORDS_NO_MATCH": "Passwords do not match",
     "LOGGED_IN_AS": "Logged is as {:username}",
-    "LOGOUT": "Logout"
+    "LOGOUT": "Logout",
+    "MY_TICKETS": "My tickets",
+    "TICKET_IDENTIFER": "ID",
+    "TICKET_TITLE": "Title",
+    "TICKET_STATUS": "Status",
+    "TICKET_LAST_UPDATE": "Last update",
+    "TICKET_STATUS_OPEN": "Open",
+    "TICKET_STATUS_AWAITING": "Waiting for an answer",
+    "TICKET_STATUS_CLOSED": "Closed"
 }

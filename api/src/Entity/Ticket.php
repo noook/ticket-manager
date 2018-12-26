@@ -55,6 +55,11 @@ class Ticket
      */
     private $messages;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $identifier;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
@@ -178,6 +183,18 @@ class Ticket
                 $message->setTicket(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIdentifier(): ?string
+    {
+        return $this->identifier;
+    }
+
+    public function setIdentifier(string $identifier): self
+    {
+        $this->identifier = $identifier;
 
         return $this;
     }

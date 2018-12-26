@@ -52,6 +52,7 @@ class TokenSubscriber implements EventSubscriberInterface
         if ($nearExpiracy < $now) {
             $newToken = $this->tokenHandler->refreshToken($token);
             $response->headers->set('X-REFRESHED-TOKEN', $newToken);
+            $response->headers->set('X-TOKEN-EXPIRACY', (new \DateTime())->add(new \DateInterval('P1D'))->format('c'));
         }
     }
 

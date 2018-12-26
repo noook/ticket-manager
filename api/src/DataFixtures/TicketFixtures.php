@@ -10,9 +10,17 @@ use App\DataFixtures\UserFixtures;
 
 use App\Entity\Ticket;
 use App\Entity\User;
+use App\Service\TicketHandler;
 
 class TicketFixtures extends Fixture implements DependentFixtureInterface
 {
+    private $ticketHandler;
+
+    public function __construct(TicketHandler $ticketHandler)
+    {
+        $this->ticketHandler = $ticketHandler;
+    }
+
     public function load(ObjectManager $manager)
     {
         $em = $manager->getRepository(User::class);
@@ -29,6 +37,7 @@ class TicketFixtures extends Fixture implements DependentFixtureInterface
             $ticket->setTitle($titles[$i]);
             $ticket->setAuthor($customer);
             $ticket->setStatus("open");
+            $ticket->setIdentifier($_ENV['TICKET_PREFIX'].'-'.$this->ticketHandler->generate());
             $ticket->setParticipants([]);
             $manager->persist($ticket);
         }
