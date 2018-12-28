@@ -33,6 +33,12 @@ class Message
      */
     private $created_at;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $author;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -83,5 +89,17 @@ class Message
         if ($this->getCreatedAt() == null) {
             $this->setCreatedAt(new \DateTime('now'));
         }
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
+
+        return $this;
     }
 }

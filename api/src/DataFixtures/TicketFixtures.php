@@ -27,9 +27,9 @@ class TicketFixtures extends Fixture implements DependentFixtureInterface
         $customer = $em->findOneBy(['username' => 'nook']);
         
         $titles = [
+            "Cannot set GOPATH",
             "Server crashed I don't know why",
             "Oops, lost my password",
-            "Cannot set GOPATH",
         ];
 
         for ($i = 0; $i < count($titles); $i++) {

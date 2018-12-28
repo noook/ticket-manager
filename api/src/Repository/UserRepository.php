@@ -6,6 +6,8 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
+use Doctrine\ORM\Query\ResultSetMapping;
+
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
  * @method User|null findOneBy(array $criteria, array $orderBy = null)
@@ -19,32 +21,29 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return User Returns an admin
+     */
+    public function findOneAdmin()
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $userMapping = new ResultSetMapping;
+        $userMapping->addEntityResult(User::class, 'u');
+        $userMapping->addFieldResult('u', 'id', 'id');
 
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $query = "SELECT * FROM \"user\" WHERE '\"ROLE_ADMIN\"' = ANY (ARRAY(select * from json_array_elements(roles))::text[]);";
+        return $this->getEntityManager()->createNativeQuery($query, $userMapping)->getResult()[0];
     }
-    */
+
+    /**
+     * @return User Returns a simple user (not admin)
+     */
+    public function findOneNotAdmin()
+    {
+        $userMapping = new ResultSetMapping;
+        $userMapping->addEntityResult(User::class, 'u');
+        $userMapping->addFieldResult('u', 'id', 'id');
+
+        $query = "SELECT * FROM \"user\" WHERE NOT ('\"ROLE_ADMIN\"' = ANY (ARRAY(select * from json_array_elements(roles))::text[]));";
+        return $this->getEntityManager()->createNativeQuery($query, $userMapping)->getResult()[0];
+    }
 }

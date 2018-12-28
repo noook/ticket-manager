@@ -5,6 +5,9 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityManager;
+
+use App\Entity\User;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TicketRepository")
@@ -46,7 +49,7 @@ class Ticket
     private $created_at;
 
     /**
-     * @ORM\Column(type="array", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      */
     private $participants = [];
 
@@ -59,6 +62,8 @@ class Ticket
      * @ORM\Column(type="string", length=255)
      */
     private $identifier;
+
+    private $em;
 
     public function __construct()
     {
@@ -146,12 +151,23 @@ class Ticket
 
     public function getParticipants(): ?array
     {
-        return $this->participants;
+        $manager = $this->em->getRepository(User::class);
+        $list = [];
+
+        for ($i = 0; $i < count($this->participants); $i++) {
+            $list[] = $manager->findOneBy(['id' => $this->participants[$i]]);
+        }
+
+        return $list;
     }
 
     public function setParticipants(?array $participants): self
     {
-        $this->participants = $participants;
+        $list = [];
+        for ($i = 0; $i < count($participants); $i++) {
+            $list[] = $participants[$i]->getId();
+        }
+        $this->participants = $list;
 
         return $this;
     }
@@ -197,5 +213,13 @@ class Ticket
         $this->identifier = $identifier;
 
         return $this;
+    }
+
+    private function getEm()
+    {
+        if (is_null($this->em)) {
+            $this->em = new EntityManager();
+        }
+        return $this->em;
     }
 }

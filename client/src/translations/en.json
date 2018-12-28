@@ -18,5 +18,6 @@
     "TICKET_LAST_UPDATE": "Last update",
     "TICKET_STATUS_OPEN": "Open",
     "TICKET_STATUS_AWAITING": "Waiting for an answer",
-    "TICKET_STATUS_CLOSED": "Closed"
+    "TICKET_STATUS_CLOSED": "Closed",
+    "REQUEST_STATUS": "Request status"
 }

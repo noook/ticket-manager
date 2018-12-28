@@ -29,6 +29,17 @@ class UserFixtures extends Fixture
         $datetime = new \DateTime();
         $user->setTokenExpiracy($datetime->add(new \DateInterval('P1D')));
         $manager->persist($user);
+
+        $admin = new User();
+        $admin->setUsername('administrator');
+        $admin->setEmail('admin@neilrichter.com');
+        $admin->setPassword('$argon2i$v=19$m=1024,t=2,p=2$dklyQjFiSmNERDYveWlJUg$2Uzlfl/s7sCeLPy98PLjHglV/q8i2lVci+L5nFydVD4');
+        $admin->setRoles(["ROLE_ADMIN"]);
+        $admin->setApiToken($this->tokenHandler->generate());
+        $datetime = new \DateTime();
+        $admin->setTokenExpiracy($datetime->add(new \DateInterval('P1D')));
+        $manager->persist($admin);
+
         $manager->flush();
     }
 }

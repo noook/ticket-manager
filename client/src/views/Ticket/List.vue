@@ -9,7 +9,10 @@
           <td>{{ translations.TICKET_STATUS }}</td>
           <td>{{ translations.TICKET_LAST_UPDATE }}</td>
         </thead>
-        <tr v-for="(item, index) in tickets" :key="index">
+        <tr
+          v-for="(item, index) in tickets"
+          :key="index"
+          @click="$router.push({ name: 'ticket-detail', params: { id: item.identifier }})">
           <td>#{{ item.identifier }}</td>
           <td>{{ item.title }}</td>
           <td>
@@ -28,7 +31,7 @@
 import moment from 'moment';
 
 export default {
-  name: 'Tickets',
+  name: 'TicketsList',
   data() {
     return {
       tickets: [],
