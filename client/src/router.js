@@ -4,6 +4,7 @@ import Home from './views/Home.vue';
 import Authentication from './views/Authentication.vue';
 import TicketsList from './views/Ticket/List.vue';
 import TicketsDetail from './views/Ticket/Detail.vue';
+import TicketCreation from './views/Ticket/Creation.vue';
 import { checkConnexion } from './utils/api';
 
 Vue.use(Router);
@@ -30,6 +31,11 @@ const router = new Router({
       path: '/tickets',
       name: 'tickets',
       component: TicketsList,
+    },
+    {
+      path: '/tickets/new',
+      name: 'ticket-creation',
+      component: TicketCreation,
     },
     {
       path: '/tickets/:id',

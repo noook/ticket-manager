@@ -37,7 +37,7 @@ class TicketFixtures extends Fixture implements DependentFixtureInterface
             $ticket->setTitle($titles[$i]);
             $ticket->setAuthor($customer);
             $ticket->setStatus("open");
-            $ticket->setIdentifier($_ENV['TICKET_PREFIX'].'-'.$this->ticketHandler->generate());
+            $ticket->setIdentifier($this->ticketHandler->generate());
             $ticket->setParticipants([]);
             $manager->persist($ticket);
         }

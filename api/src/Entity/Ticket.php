@@ -5,7 +5,6 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\EntityManager;
 
 use App\Entity\User;
 
@@ -151,14 +150,7 @@ class Ticket
 
     public function getParticipants(): ?array
     {
-        $manager = $this->em->getRepository(User::class);
-        $list = [];
-
-        for ($i = 0; $i < count($this->participants); $i++) {
-            $list[] = $manager->findOneBy(['id' => $this->participants[$i]]);
-        }
-
-        return $list;
+        return $this->participants;
     }
 
     public function setParticipants(?array $participants): self

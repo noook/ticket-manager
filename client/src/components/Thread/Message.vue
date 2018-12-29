@@ -28,7 +28,7 @@ export default {
     border: solid 1px $flatBlack;
     border-radius: 5px;
     margin: 15px 0;
-    
+
     > .bar {
       @include d-flex-centered(space-between);
       border-bottom: solid 1px $flatBlack;

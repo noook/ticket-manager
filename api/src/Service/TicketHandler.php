@@ -15,7 +15,7 @@ class TicketHandler {
 
     public function generate(): String
     {
-        $newIdentifier = strtoupper(bin2hex(random_bytes(4)));
+        $newIdentifier = $_ENV['TICKET_PREFIX'].'-'.strtoupper(bin2hex(random_bytes(4)));
         if (!$this->isAvailable($newIdentifier)) {
             $this->generate();
         }
