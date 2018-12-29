@@ -19,5 +19,9 @@
     "TICKET_STATUS_OPEN": "Open",
     "TICKET_STATUS_AWAITING": "Waiting for an answer",
     "TICKET_STATUS_CLOSED": "Closed",
-    "REQUEST_STATUS": "Request status"
+    "REQUEST_STATUS": "Request status",
+    "TICKET_AUTHOR": "Author",
+    "TICKET_CREATION_DATE": "Created at",
+    "AUTHOR_SAID": "said:",
+    "ANSWER_POSTED_AT": "Posted at:"
 }
