@@ -21,11 +21,13 @@
     "TICKET_STATUS_CLOSED": "Closed",
     "REQUEST_STATUS": "Request status",
     "TICKET_AUTHOR": "Author",
+    "PARTICIPATING": "Participating",
     "TICKET_CREATION_DATE": "Created at",
     "AUTHOR_SAID": "said:",
     "ANSWER_POSTED_AT": "Posted at:",
     "NEW_TICKET": "New ticket",
     "TICKET_SUBJECT": "Subject",
+    "ADD_A_MESSAGE": "Add a message",
     "TICKET_MESSAGE": "Message",
     "SUBMIT_FORM": "Submit"
 }

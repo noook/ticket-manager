@@ -29,7 +29,7 @@ class MessageFixtures extends Fixture implements DependentFixtureInterface
         $ticketManager = $manager->getRepository(Ticket::class);
         
         $now = new \DateTime();
-        $ticket = $ticketManager->findAll()[0];
+        $ticket = $ticketManager->findOneBy(['title' => 'Cannot set GOPATH']);
         $admin = $this->userRepository->findOneAdmin();
         $user = $this->userRepository->findOneNotAdmin();
         $messages = [];
@@ -65,6 +65,24 @@ class MessageFixtures extends Fixture implements DependentFixtureInterface
 
         $ticket->setStatus('closed');
         
+        $manager->flush();
+
+        $ticket = $ticketManager->findOneBy(['title' => "Server crashed I don't know why"]);
+        $message = new Message;
+        $message
+            ->setAuthor($user)
+            ->setContent("Hello,\n I tried to run an infinite loop on my server but I don't understand the server does not respond anymore what am I doing wrong?")
+            ->setTicket($ticket);
+        $manager->persist($message);
+        $manager->flush();
+
+        $ticket = $ticketManager->findOneBy(['title' => 'Oops, lost my password']);
+        $message = new Message;
+        $message
+            ->setAuthor($user)
+            ->setContent('I know my password is "password" but when I type "12345678" it tells me my password is incorrect, why ?')
+            ->setTicket($ticket);
+        $manager->persist($message);
         $manager->flush();
     }
 

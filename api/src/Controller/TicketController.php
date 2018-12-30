@@ -30,6 +30,7 @@ class TicketController extends AbstractController
     {
         $user = $this->getUser();
         $tickets = [];
+        dump($user->getTickets());
         foreach ($user->getTickets() as $ticket) {
             $tickets[] = [
                 'identifier' => $ticket->getIdentifier(),
@@ -51,7 +52,6 @@ class TicketController extends AbstractController
     {
         $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
-        dump($data);
 
         $ticket = new Ticket;
         $ticket
@@ -123,5 +123,37 @@ class TicketController extends AbstractController
             'messages' => $messages,
             'participants' => $participants,
         ]);
+    }
+
+    /**
+     * @Route("/tickets/{identifier}/new-message", name="new-ticket-message")
+     * @IsGranted("ROLE_USER")
+     */
+    public function newMessage($identifier, Request $request, TicketRepository $ticketRepository, ObjectManager $em)
+    {
+        $user = $this->getUser();
+        $content = json_decode($request->getContent(), true)['message'];
+
+        $message = new Message;
+        $message
+            ->setAuthor($user)
+            ->setContent($content)
+            ->setTicket($ticketRepository->findOneBy(['identifier' => $identifier]));
+
+        $em->persist($message);
+
+        $em->flush();
+
+        dump($message);
+
+        $message = [
+            'author' => $message->getAuthor()->getUsername(),
+            'content' => $message->getContent(),
+            'posted' => $message->getCreatedAt()->format('c'),
+        ];
+
+        return $this->json([
+            'message' => $message,
+        ], 201);
     }
 }
