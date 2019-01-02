@@ -44,7 +44,7 @@ class TokenSubscriber implements EventSubscriberInterface
         $credentials = $this->tokenAuthenticator->getCredentials($request);
         $user = $this->tokenAuthenticator->getUser($credentials, $this->userProvider);
         if (is_null($user)) {
-            throw new AccessDeniedHttpException('Invalid token');
+            throw new AccessDeniedHttpException('Requires Authentication');
         }
         
         $now = new \DateTime();

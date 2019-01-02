@@ -19,8 +19,9 @@ export default new Vuex.Store({
       localStorage.setItem('AUTH_TOKEN', data.token);
       localStorage.setItem('TOKEN_EXPIRACY', data.expiracy);
     },
-    SET_USER(state, username) {
-      Vue.set(state, 'USER', username);
+    SET_USER(state, data) {
+      Vue.set(state, 'USER', data.username);
+      Vue.set(state, 'GRADE', data.grade);
     },
     LOGOUT(state) {
       Vue.delete(state, 'AUTH_TOKEN');

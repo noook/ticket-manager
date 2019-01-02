@@ -5,6 +5,7 @@
       <table v-if="loaded">
         <thead>
           <td>{{ translations.TICKET_IDENTIFER }}</td>
+          <td v-if="$store.state.GRADE === 'admin'">{{ translations.TICKET_AUTHOR }}</td>
           <td>{{ translations.TICKET_TITLE }}</td>
           <td>{{ translations.TICKET_STATUS }}</td>
           <td>{{ translations.TICKET_LAST_UPDATE }}</td>
@@ -14,6 +15,7 @@
           :key="index"
           @click="$router.push({ name: 'ticket-detail', params: { id: item.identifier }})">
           <td>#{{ item.identifier }}</td>
+          <td v-if="$store.state.GRADE === 'admin'">{{ item.author }}</td>
           <td>{{ item.title }}</td>
           <td>
             <span :class="item.status">•</span>

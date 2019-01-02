@@ -21,6 +21,7 @@
     "TICKET_STATUS_CLOSED": "Closed",
     "REQUEST_STATUS": "Request status",
     "TICKET_AUTHOR": "Author",
+    "ADD_PARTICIPANTS": "Add participants",
     "PARTICIPATING": "Participating",
     "TICKET_CREATION_DATE": "Created at",
     "AUTHOR_SAID": "said:",

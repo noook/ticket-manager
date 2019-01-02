@@ -10,7 +10,9 @@ api.interceptors.request.use(
     config.headers.common['X-AUTH-TOKEN'] = token;
     return config;
   },
-  (error) => Promise.reject(error));
+  (error) => {
+    Promise.reject(error);
+  });
 
 api.interceptors.response.use(
   (response) => {
@@ -31,7 +33,7 @@ export function checkConnexion() {
     },
   })
     .then(response => {
-      store.dispatch('setUser', response.data.username);
+      store.dispatch('setUser', response.data);
       if (response.headers['x-refreshed-token']) {
         store.dispatch('setToken', {
           token: response.headers['x-refreshed-token'],
@@ -40,7 +42,9 @@ export function checkConnexion() {
       }
       resolve();
     })
-    .catch(() => {
+    .catch((err) => {
+      // Let debugger, logout does not automatically work when not using the app for more than 24h
+      debugger; // eslint-disable-line
       store.dispatch('logout');
       reject();
     }));

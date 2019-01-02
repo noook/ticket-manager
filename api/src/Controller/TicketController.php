@@ -26,12 +26,18 @@ class TicketController extends AbstractController
      * @Route("/tickets", name="tickets")
      * @IsGranted("ROLE_USER")
      */
-    public function index()
+    public function index(TicketRepository $ticketRepository)
     {
         $user = $this->getUser();
         $tickets = [];
-        dump($user->getTickets());
-        foreach ($user->getTickets() as $ticket) {
+
+        $userTickets = $user->getTickets();
+
+        if (in_array("ROLE_ADMIN", $user->getRoles())) {
+            $userTickets = $ticketRepository->findAll();
+        }
+
+        foreach ($userTickets as $ticket) {
             $tickets[] = [
                 'identifier' => $ticket->getIdentifier(),
                 'title' => $ticket->getTitle(),
@@ -144,8 +150,6 @@ class TicketController extends AbstractController
 
         $em->flush();
 
-        dump($message);
-
         $message = [
             'author' => $message->getAuthor()->getUsername(),
             'content' => $message->getContent(),
@@ -155,5 +159,24 @@ class TicketController extends AbstractController
         return $this->json([
             'message' => $message,
         ], 201);
+    }
+
+    /**
+     * @Route("/tickets/{identifier}/add-participant", name="new-ticket-participant")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function newParticipant($identifier, Request $request, UserRepository $userRepository, TicketRepository $ticketRepository, ObjectManager $em)
+    {
+        $user = $this->getUser();
+        $participantID = json_decode($request->getContent(), true)['participant'];
+        $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
+        $participant = $userRepository->findOneBy(['id' => $participantID]);
+        $ticket->addParticipant($participant->getId());
+
+        $em->flush();
+
+        return $this->json([
+            'participant' => $participant->getUsername(),
+        ]);
     }
 }

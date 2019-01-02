@@ -23,6 +23,9 @@
         {{ latestMessage.posted | moment('DD/MM/YYYY HH:mm ')}}
       </div>
     </div>
+    <div class="admin-panel" v-if="$store.state.GRADE === 'admin'">
+      <UserSearch :participants.sync="participants"/>
+    </div>
     <div class="participants" v-if="loaded" v-show="participants.length">
       <h2>{{ translations.PARTICIPATING }}:</h2>
       <ul>
@@ -53,11 +56,13 @@
 
 <script>
 import Message from '@/components/Thread/Message.vue';
+import UserSearch from '@/components/Input/UserSearch.vue';
 
 export default {
   name: 'Ticketdetail',
   components: {
     Message,
+    UserSearch,
   },
   async created() {
     const { ticket, messages, participants } = await this.fetchTicket();

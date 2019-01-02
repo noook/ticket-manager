@@ -164,6 +164,15 @@ class Ticket
         return $this;
     }
 
+    public function addParticipant(int $participant): self
+    {
+        if (!in_array($participant, $this->participants)) {
+            $this->participants[] = $participant;
+        }
+
+        return $this;
+    }
+
     /**
      * @return Collection|Message[]
      */

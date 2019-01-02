@@ -46,4 +46,18 @@ class UserRepository extends ServiceEntityRepository
         $query = "SELECT * FROM \"user\" WHERE NOT ('\"ROLE_ADMIN\"' = ANY (ARRAY(select * from json_array_elements(roles))::text[]));";
         return $this->getEntityManager()->createNativeQuery($query, $userMapping)->getResult()[0];
     }
+
+    public function findOneLike(String $term)
+    {
+        $userMapping = new ResultSetMapping;
+        $userMapping->addEntityResult(User::class, 'u');
+        $userMapping->addFieldResult('u', 'id', 'id');
+        $userMapping->addFieldResult('u', 'username', 'username');
+
+        $term = implode('%', str_split($term));
+
+        $query = "SELECT * FROM \"user\" WHERE username LIKE '%$term%' LIMIT 5";
+        $result = $this->getEntityManager()->createNativeQuery($query, $userMapping)->getResult();
+        return $result;
+    }
 }

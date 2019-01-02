@@ -115,6 +115,7 @@ class SecurityController extends AbstractController
 
         return $this->json([
             'username' => $user->getUsername(),
+            'grade' => in_array("ROLE_ADMIN", $user->getRoles()) ? 'admin' : 'user',
         ]);
     }
 }
