@@ -179,4 +179,22 @@ class TicketController extends AbstractController
             'participant' => $participant->getUsername(),
         ]);
     }
+    
+    /**
+     * @Route("/tickets/{identifier}/remove-participant", name="remove-ticket-participant")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function removeParticipant($identifier, Request $request, UserRepository $userRepository, TicketRepository $ticketRepository, ObjectManager $em)
+    {
+        $username = json_decode($request->getContent(), true)['participant'];
+        $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
+        $participant = $userRepository->findOneBy(['username' => $username]);
+        $ticket->removeParticipant($participant->getId());
+
+        $em->flush();
+
+        return $this->json([
+            'participant' => $participant->getUsername(),
+        ]);
+    }
 }

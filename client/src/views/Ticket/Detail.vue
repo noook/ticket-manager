@@ -31,7 +31,15 @@
       <ul>
         <li v-for="(item, index) in participants" :key="index">
           {{ item }}
+          <img
+            @click="confirmParticipantDelete(item)"
+            src="@/assets/svg/close.svg"/>
         </li>
+        <ConfirmPopup
+          :message="confirmMessage"
+          :open="popupOpen"
+          @confirm="deleteParticipant"
+          @close="popupOpen = false"/>
       </ul>
     </div>
     <img src="@/assets/svg/loading.svg" alt="Loading" v-else>
@@ -56,6 +64,7 @@
 
 <script>
 import Message from '@/components/Thread/Message.vue';
+import ConfirmPopup from '@/components/Popup/Confirm.vue';
 import UserSearch from '@/components/Input/UserSearch.vue';
 
 export default {
@@ -63,6 +72,7 @@ export default {
   components: {
     Message,
     UserSearch,
+    ConfirmPopup,
   },
   async created() {
     const { ticket, messages, participants } = await this.fetchTicket();
@@ -78,9 +88,17 @@ export default {
       messages: [],
       participants: [],
       newMessage: '',
+      popupOpen: false,
+      confirmMessage: '',
+      toDelete: null,
     };
   },
   methods: {
+    confirmParticipantDelete(username) {
+      this.confirmMessage = this.translations.params('CONFIRM_PARTICIPANT_DELETION', { username });
+      this.toDelete = username;
+      this.popupOpen = true;
+    },
     fetchTicket() {
       return this.$api.get(`http://ticket-manager.ml/tickets/${this.$route.params.id}`)
         .then(response => response.data)
@@ -95,6 +113,18 @@ export default {
         })
         .catch(err => console.log(err)); // eslint-disable-line
       this.newMessage = '';
+    },
+    async deleteParticipant() {
+      const { participant } = await this.$api.delete(`http://ticket-manager.ml/tickets/${this.$route.params.id}/remove-participant`, {
+        data: {
+          participant: this.toDelete,
+        },
+      })
+        .then(response => response.data)
+        .catch(err => console.log(err)); // eslint-disable-line
+
+      this.participants.splice(this.participants.indexOf(participant), 1);
+      this.popupOpen = false;
     },
   },
   computed: {
@@ -160,6 +190,30 @@ export default {
           border-radius: 5px;
           border: solid 1px rgba($flatBlack, .5);
           margin: 0 5px;
+          position: relative;
+
+          > img {
+            height: 8px;
+            width: 8px;
+            margin-left: 5px;
+            visibility: hidden;
+            top: -6px;
+            right: -6px;
+            background-color: $flatRed;
+            padding: 4px;
+            border-radius: 100%;
+            position: absolute;
+
+            &:hover {
+              cursor: pointer;
+            }
+          }
+
+          &:hover {
+            > img {
+              visibility: visible;
+            }
+          }
         }
       }
     }

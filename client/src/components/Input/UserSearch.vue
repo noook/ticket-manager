@@ -28,7 +28,7 @@ export default {
     };
   },
   created() {
-    this.debouncedSearch = debounce(this.searchUser, 500);
+    this.debouncedSearch = debounce(this.searchUser, 300);
   },
   methods: {
     async searchUser() {
@@ -51,7 +51,6 @@ export default {
       })
         .then(response => response.data)
         .catch(err => console.log(err)); // eslint-disable-line
-      // console.log(participant);
       this.participants.push(participant);
       this.query = '';
     },

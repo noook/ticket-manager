@@ -173,6 +173,22 @@ class Ticket
         return $this;
     }
 
+    public function removeParticipant(int $participant): self
+    {
+        $participants = [];
+
+        // iterating this way prevents array serialization with keys in the database
+        for ($i = 0; $i < count($this->participants); $i++) {
+            if ($this->participants[$i] != $participant) {
+                $participants[] = $this->participants[$i];
+            }
+        }
+        
+        $this->participants = $participants;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Message[]
      */
