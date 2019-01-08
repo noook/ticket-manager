@@ -32,7 +32,7 @@
           <td>{{ item.title }}</td>
           <td>
             <span :class="item.status">•</span>
-            {{ translations[`TICKET_STATUS_${item.status.toUpperCase()}`] }}
+            {{ translations[`TICKET_STATUS_SHORT_${item.status.toUpperCase()}`] }}
           </td>
           <td>{{ item.updated | moment('DD-MM-YYYY') }}</td>
         </tr>

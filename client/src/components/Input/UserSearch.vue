@@ -79,6 +79,11 @@ export default {
 
       > input {
         margin-right: 15px;
+        border-radius: 5px;
+        border: solid 1px rgba($flatBlack, .5);
+        padding: 3px 10px;
+        font-family: $defaultFont;
+        font-size: 1rem;
       }
 
       > div p {

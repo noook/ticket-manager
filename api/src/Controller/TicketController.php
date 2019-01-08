@@ -49,7 +49,6 @@ class TicketController extends AbstractController
             ];
         }
 
-        dump(array_column($tickets, 'identifier'));
         foreach ($userTickets as $ticket) {
             if (array_search($ticket->getIdentifier(), array_column($tickets, 'identifier')) === false) {
                 $tickets[] = [
@@ -165,10 +164,20 @@ class TicketController extends AbstractController
         $content = json_decode($request->getContent(), true)['message'];
 
         $message = new Message;
+        $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
+
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        $isParticipating = $ticket->getParticipants()->contains($user);
+        dump($isAdmin, $isParticipating);
+
         $message
             ->setAuthor($user)
             ->setContent($content)
-            ->setTicket($ticketRepository->findOneBy(['identifier' => $identifier]));
+            ->setTicket($ticket);
+
+        if ($isParticipating || $isAdmin) {
+            $ticket->setStatus('awaiting');
+        }
 
         $em->persist($message);
 
@@ -182,6 +191,9 @@ class TicketController extends AbstractController
 
         return $this->json([
             'message' => $message,
+            'ticket' => [
+                'status' => $ticket->getStatus(),
+            ],
         ], 201);
     }
 

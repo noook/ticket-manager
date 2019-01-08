@@ -12,7 +12,8 @@
       </div>
       <div class="group">
         {{ translations.TICKET_STATUS }}:
-        <span :class="ticket.status">•</span>{{ ticket.status }}
+        <span :class="ticket.status">•</span>
+        {{ translations[`TICKET_STATUS_${ticket.status.toUpperCase()}`] }}
       </div>
       <div class="group">
         {{ translations.TICKET_CREATION_DATE }}:
@@ -111,6 +112,7 @@ export default {
       })
         .then(({ data }) => {
           this.messages.push(data.message);
+          this.ticket.status = data.ticket.status;
         })
         .catch(err => console.log(err)); // eslint-disable-line
       this.newMessage = '';
