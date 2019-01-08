@@ -16,6 +16,8 @@
     "LOGOUT": "Logout",
     "MY_TICKETS": "My tickets",
     "LIST_SHOW_CLOSED_TICKETS": "Show closed tickets",
+    "LIST_SHOW_ASSIGNED_TICKETS": "Show assigned tickets",
+    "ASSIGNED_TO_THIS": "Assigned",
     "TICKET_IDENTIFER": "ID",
     "TICKET_TITLE": "Title",
     "TICKET_STATUS": "Status",

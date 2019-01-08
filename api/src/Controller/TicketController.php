@@ -29,7 +29,6 @@ class TicketController extends AbstractController
     public function index(TicketRepository $ticketRepository)
     {
         $user = $this->getUser();
-        $tickets = [];
 
         $userTickets = $user->getTickets();
 
@@ -37,9 +36,11 @@ class TicketController extends AbstractController
             $userTickets = $ticketRepository->findAll();
         }
 
-        foreach ($userTickets as $ticket) {
+        $tickets = [];
+        foreach ($user->getParticipatingTo() as $ticket) {
             $tickets[] = [
                 'identifier' => $ticket->getIdentifier(),
+                'assigned' => true,
                 'title' => $ticket->getTitle(),
                 'author' => $ticket->getAuthor()->getUsername(),
                 'status' => $ticket->getStatus(),
@@ -48,17 +49,19 @@ class TicketController extends AbstractController
             ];
         }
 
-        foreach ($user->getParticipatingTo() as $ticket) {
-            $tickets[] = [
-                'identifier' => $ticket->getIdentifier(),
-                'title' => $ticket->getTitle(),
-                'author' => $ticket->getAuthor()->getUsername(),
-                'status' => $ticket->getStatus(),
-                'created' => $ticket->getCreatedAt()->format('c'),
-                'updated' => $ticket->getUpdatedAt()->format('c'),
-            ];
+        dump(array_column($tickets, 'identifier'));
+        foreach ($userTickets as $ticket) {
+            if (array_search($ticket->getIdentifier(), array_column($tickets, 'identifier')) === false) {
+                $tickets[] = [
+                    'identifier' => $ticket->getIdentifier(),
+                    'title' => $ticket->getTitle(),
+                    'author' => $ticket->getAuthor()->getUsername(),
+                    'status' => $ticket->getStatus(),
+                    'created' => $ticket->getCreatedAt()->format('c'),
+                    'updated' => $ticket->getUpdatedAt()->format('c'),
+                ];
+            }
         }
-        $tickets = array_unique($tickets, SORT_REGULAR);
           
         usort($tickets, function ($a, $b) {
             if ($a['created'] == $b['created']) {

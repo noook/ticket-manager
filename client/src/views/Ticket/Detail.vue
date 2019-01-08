@@ -23,7 +23,7 @@
         {{ latestMessage.posted | moment('DD/MM/YYYY HH:mm ')}}
       </div>
     </div>
-    <div class="admin-panel" v-if="$store.state.GRADE === 'admin'">
+    <div class="admin-panel" v-if="$store.state.GRADE === 'admin' && loaded">
       <UserSearch :participants.sync="participants"/>
     </div>
     <div class="participants" v-if="loaded" v-show="participants.length">

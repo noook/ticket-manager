@@ -7,6 +7,8 @@
           <td colspan="10">
             <input type="checkbox" v-model="showClosed">
             <label>{{ translations.LIST_SHOW_CLOSED_TICKETS }}</label>
+            <input type="checkbox" v-model="showAssigned">
+            <label>{{ translations.LIST_SHOW_ASSIGNED_TICKETS }}</label>
           </td>
         </thead>
         <thead>
@@ -20,7 +22,12 @@
           v-for="(item, index) in filteredList"
           :key="index"
           @click="$router.push({ name: 'ticket-detail', params: { id: item.identifier }})">
-          <td>#{{ item.identifier }}</td>
+          <td>
+            #{{ item.identifier }}
+            <span class="ticket-assigned" v-if="item.assigned">
+              {{ translations.ASSIGNED_TO_THIS }}
+            </span>
+          </td>
           <td>{{ item.author }}</td>
           <td>{{ item.title }}</td>
           <td>
@@ -44,6 +51,7 @@ export default {
     return {
       tickets: [],
       showClosed: false,
+      showAssigned: true,
       loaded: false,
     };
   },
@@ -68,10 +76,10 @@ export default {
   },
   computed: {
     filteredList() {
-      if (!this.showClosed) {
-        return this.tickets.filter(ticket => ticket.status !== 'closed');
-      }
-      return this.tickets;
+      const { showClosed, showAssigned } = this;
+      return this.tickets
+        .filter(ticket => showClosed || ticket.status !== 'closed')
+        .filter(ticket => showAssigned || !ticket.assigned);
     },
   },
 };
@@ -87,12 +95,21 @@ export default {
 
       > table {
         font-size: 1.2rem;
+        width: 80%;
         text-align: left;
         border-collapse: collapse;
         margin: auto;
 
         td {
           padding: 10px 20px;
+
+          > span.ticket-assigned {
+            margin-left: 10px;
+            font-size: .9rem;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: solid 1px rgba($flatBlack, .5);
+          }
         }
 
         thead {
