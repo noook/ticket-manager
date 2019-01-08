@@ -49,11 +49,6 @@ class User implements UserInterface
     private $created_at;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Ticket", mappedBy="author", orphanRemoval=true)
-     */
-    private $tickets;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $apiToken;
@@ -63,8 +58,19 @@ class User implements UserInterface
      */
     private $tokenExpiracy;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Ticket", mappedBy="participants")
+     */
+    private $participatingTo;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Ticket", mappedBy="author", orphanRemoval=true)
+     */
+    private $tickets;
+
     public function __construct()
     {
+        $this->participatingTo = new ArrayCollection();
         $this->tickets = new ArrayCollection();
     }
 
@@ -176,6 +182,58 @@ class User implements UserInterface
         }
     }
 
+    public function getApiToken(): ?string
+    {
+        return $this->apiToken;
+    }
+
+    public function setApiToken(?string $apiToken): self
+    {
+        $this->apiToken = $apiToken;
+
+        return $this;
+    }
+
+    public function getTokenExpiracy(): ?\DateTimeInterface
+    {
+        return $this->tokenExpiracy;
+    }
+
+    public function setTokenExpiracy(\DateTimeInterface $tokenExpiracy): self
+    {
+        $this->tokenExpiracy = $tokenExpiracy;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Ticket[]
+     */
+    public function getParticipatingTo(): Collection
+    {
+        return $this->participatingTo;
+    }
+
+    public function addParticipatingTo(Ticket $participatingTo): self
+    {
+        if (!$this->participatingTo->contains($participatingTo)) {
+            $this->participatingTo[] = $participatingTo;
+            $participatingTo->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipatingTo(Ticket $participatingTo): self
+    {
+        if ($this->participatingTo->contains($participatingTo)) {
+            $this->participatingTo->removeElement($participatingTo);
+            $participatingTo->removeParticipant($this);
+        }
+
+        return $this;
+    }
+
     /**
      * @return Collection|Ticket[]
      */
@@ -203,40 +261,6 @@ class User implements UserInterface
                 $ticket->setAuthor(null);
             }
         }
-
-        return $this;
-    }
-
-    public function repr()
-    {
-        return [
-            'id' => $this->getId(),
-            'username' => $this->getUsername(),
-            'email' => $this->getEmail(),
-            'roles' => $this->getRoles(),
-        ];
-    }
-
-    public function getApiToken(): ?string
-    {
-        return $this->apiToken;
-    }
-
-    public function setApiToken(?string $apiToken): self
-    {
-        $this->apiToken = $apiToken;
-
-        return $this;
-    }
-
-    public function getTokenExpiracy(): ?\DateTimeInterface
-    {
-        return $this->tokenExpiracy;
-    }
-
-    public function setTokenExpiracy(\DateTimeInterface $tokenExpiracy): self
-    {
-        $this->tokenExpiracy = $tokenExpiracy;
 
         return $this;
     }

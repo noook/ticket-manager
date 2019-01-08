@@ -32,6 +32,7 @@
         <li v-for="(item, index) in participants" :key="index">
           {{ item }}
           <img
+            v-if="$store.state.GRADE === 'admin'"
             @click="confirmParticipantDelete(item)"
             src="@/assets/svg/close.svg"/>
         </li>

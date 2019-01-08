@@ -6,6 +6,10 @@ use App\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
+use Doctrine\ORM\Query\ResultSetMapping;
+
+use App\Entity\User;
+
 /**
  * @method Ticket|null find($id, $lockMode = null, $lockVersion = null)
  * @method Ticket|null findOneBy(array $criteria, array $orderBy = null)

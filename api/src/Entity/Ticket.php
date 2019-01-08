@@ -48,11 +48,6 @@ class Ticket
     private $created_at;
 
     /**
-     * @ORM\Column(type="json", nullable=true)
-     */
-    private $participants = [];
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="ticket", orphanRemoval=true)
      */
     private $messages;
@@ -64,9 +59,15 @@ class Ticket
 
     private $em;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User")
+     */
+    private $participants;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
+        $this->participants = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -148,47 +149,6 @@ class Ticket
         }
     }
 
-    public function getParticipants(): ?array
-    {
-        return $this->participants;
-    }
-
-    public function setParticipants(?array $participants): self
-    {
-        $list = [];
-        for ($i = 0; $i < count($participants); $i++) {
-            $list[] = $participants[$i]->getId();
-        }
-        $this->participants = $list;
-
-        return $this;
-    }
-
-    public function addParticipant(int $participant): self
-    {
-        if (!in_array($participant, $this->participants)) {
-            $this->participants[] = $participant;
-        }
-
-        return $this;
-    }
-
-    public function removeParticipant(int $participant): self
-    {
-        $participants = [];
-
-        // iterating this way prevents array serialization with keys in the database
-        for ($i = 0; $i < count($this->participants); $i++) {
-            if ($this->participants[$i] != $participant) {
-                $participants[] = $this->participants[$i];
-            }
-        }
-        
-        $this->participants = $participants;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Message[]
      */
@@ -238,5 +198,31 @@ class Ticket
             $this->em = new EntityManager();
         }
         return $this->em;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(User $participant): self
+    {
+        if (!$this->participants->contains($participant)) {
+            $this->participants[] = $participant;
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(User $participant): self
+    {
+        if ($this->participants->contains($participant)) {
+            $this->participants->removeElement($participant);
+        }
+
+        return $this;
     }
 }

@@ -47,6 +47,27 @@ class TicketController extends AbstractController
                 'updated' => $ticket->getUpdatedAt()->format('c'),
             ];
         }
+
+        foreach ($user->getParticipatingTo() as $ticket) {
+            $tickets[] = [
+                'identifier' => $ticket->getIdentifier(),
+                'title' => $ticket->getTitle(),
+                'author' => $ticket->getAuthor()->getUsername(),
+                'status' => $ticket->getStatus(),
+                'created' => $ticket->getCreatedAt()->format('c'),
+                'updated' => $ticket->getUpdatedAt()->format('c'),
+            ];
+        }
+        $tickets = array_unique($tickets, SORT_REGULAR);
+          
+        usort($tickets, function ($a, $b) {
+            if ($a['created'] == $b['created']) {
+                return 0;
+            }
+            
+            return ($a['created'] > $b['created']) ? -1 : 1;
+        });
+
         return $this->json($tickets);
     }
 
@@ -63,7 +84,6 @@ class TicketController extends AbstractController
         $ticket
             ->setAuthor($user)
             ->setStatus('open')
-            ->setParticipants([])
             ->setTitle($data['subject'])
             ->setIdentifier($ticketHandler->generate());
 
@@ -94,8 +114,9 @@ class TicketController extends AbstractController
         $user = $this->getUser();
 
         $isOwner = $ticket->getAuthor()->getId() == $user->getId();
+        $isParticipating = $user->getParticipatingTo()->contains($ticket);
         
-        if (!$isOwner) {
+        if (!$isOwner && !$isParticipating) {
             $this->denyAccessUnlessGranted('ROLE_ADMIN');
         }
 
@@ -171,7 +192,7 @@ class TicketController extends AbstractController
         $participantID = json_decode($request->getContent(), true)['participant'];
         $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
         $participant = $userRepository->findOneBy(['id' => $participantID]);
-        $ticket->addParticipant($participant->getId());
+        $ticket->addParticipant($participant);
 
         $em->flush();
 
@@ -189,7 +210,7 @@ class TicketController extends AbstractController
         $username = json_decode($request->getContent(), true)['participant'];
         $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
         $participant = $userRepository->findOneBy(['username' => $username]);
-        $ticket->removeParticipant($participant->getId());
+        $ticket->removeParticipant($participant);
 
         $em->flush();
 

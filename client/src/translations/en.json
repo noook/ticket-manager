@@ -15,6 +15,7 @@
     "CONFIRM": "Confirm",
     "LOGOUT": "Logout",
     "MY_TICKETS": "My tickets",
+    "LIST_SHOW_CLOSED_TICKETS": "Show closed tickets",
     "TICKET_IDENTIFER": "ID",
     "TICKET_TITLE": "Title",
     "TICKET_STATUS": "Status",

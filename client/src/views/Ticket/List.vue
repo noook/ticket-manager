@@ -3,19 +3,25 @@
     <h1>{{ translations.MY_TICKETS }}</h1>
     <div class="ticket-list">
       <table v-if="loaded">
+        <thead class="filters">
+          <td colspan="10">
+            <input type="checkbox" v-model="showClosed">
+            <label>{{ translations.LIST_SHOW_CLOSED_TICKETS }}</label>
+          </td>
+        </thead>
         <thead>
           <td>{{ translations.TICKET_IDENTIFER }}</td>
-          <td v-if="$store.state.GRADE === 'admin'">{{ translations.TICKET_AUTHOR }}</td>
+          <td>{{ translations.TICKET_AUTHOR }}</td>
           <td>{{ translations.TICKET_TITLE }}</td>
           <td>{{ translations.TICKET_STATUS }}</td>
           <td>{{ translations.TICKET_LAST_UPDATE }}</td>
         </thead>
         <tr
-          v-for="(item, index) in tickets"
+          v-for="(item, index) in filteredList"
           :key="index"
           @click="$router.push({ name: 'ticket-detail', params: { id: item.identifier }})">
           <td>#{{ item.identifier }}</td>
-          <td v-if="$store.state.GRADE === 'admin'">{{ item.author }}</td>
+          <td>{{ item.author }}</td>
           <td>{{ item.title }}</td>
           <td>
             <span :class="item.status">•</span>
@@ -37,6 +43,7 @@ export default {
   data() {
     return {
       tickets: [],
+      showClosed: false,
       loaded: false,
     };
   },
@@ -57,6 +64,14 @@ export default {
       return this.$api.get('http://ticket-manager.ml/tickets')
         .then(response => response.data)
         .catch(err => console.log(err)); // eslint-disable-line
+    },
+  },
+  computed: {
+    filteredList() {
+      if (!this.showClosed) {
+        return this.tickets.filter(ticket => ticket.status !== 'closed');
+      }
+      return this.tickets;
     },
   },
 };
@@ -84,6 +99,17 @@ export default {
           color: rgba($flatBlack, .4);
           background-color: #efefef;
           font-weight: 500;
+
+          &.filters {
+            background-color: inherit;
+
+            input {
+              margin: 0 10px;
+            }
+            label {
+              margin-right: 10px;
+            }
+          }
         }
 
         > tr {

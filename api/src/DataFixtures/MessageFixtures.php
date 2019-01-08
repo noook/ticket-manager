@@ -43,7 +43,7 @@ class MessageFixtures extends Fixture implements DependentFixtureInterface
 
         $manager->flush(); // flush messages one by one otherwise all messages will have the same created at value
 
-        $ticket->setParticipants([$admin]);
+        $ticket->addParticipant($admin);
 
         $later = $now->add(new \DateInterval('PT1H'));
         $secondMessage = new Message;
