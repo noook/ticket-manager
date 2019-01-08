@@ -8,13 +8,13 @@
         {{ translations.ANSWER_POSTED_AT }} {{ message.posted | moment('DD/MM/YYYY HH:mm')}}
       </div>
     </div>
-    <div class="content" :class="{'less-padding': $store.state.GRADE === 'admin'}">
+    <div class="content" :class="{'less-padding': $store.state.GRADE === 'admin' && identifier}">
       <p v-for="(paragraph, index) in message.content.split('\n')" :key="index">
         {{ paragraph }}
       </p>
     </div>
-    <div class="footer" v-if="$store.state.GRADE === 'admin'">
-      <EditButton />
+    <div class="footer" v-if="$store.state.GRADE === 'admin' && identifier">
+      <EditButton @click="editMessage"/>
       <TrashButton @click="deleteMessage"/>
     </div>
   </div>
@@ -30,13 +30,15 @@ export default {
     EditButton,
   },
   name: 'ThreadMessage',
-  props: ['message'],
+  props: ['message', 'identifier'],
   methods: {
     deleteMessage() {
-      const ticketId = this.$parent.ticket.identifier;
-      this.$api.delete(`http://ticket-manager.ml/tickets/${ticketId}/message/${this.message.id}`)
+      this.$api.delete(`http://ticket-manager.ml/tickets/${this.identifier}/message/${this.message.id}`)
         .then(() => this.$emit('deleted'))
         .catch(err => console.log(err)); // eslint-disable-line
+    },
+    editMessage() {
+      this.$emit('edit');
     },
   },
 };

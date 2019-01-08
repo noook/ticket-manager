@@ -48,8 +48,10 @@
     <section class="thread">
       <Message
         v-for="(item, index) in messages"
+        @edit="editMessage(item)"
         @deleted="deleteMessage(item)"
         :key="index"
+        :identifier="ticket.identifier"
         :message="item"/>
     </section>
     <section class="new-message" v-if="loaded" v-show="ticket.status != 'closed'">
@@ -117,6 +119,15 @@ export default {
         })
         .catch(err => console.log(err)); // eslint-disable-line
       this.newMessage = '';
+    },
+    editMessage(message) {
+      this.$router.push({
+        name: 'message-edit',
+        params: {
+          identifier: this.ticket.identifier,
+          id: message.id,
+        },
+      });
     },
     deleteMessage(message) {
       this.messages.splice(this.messages.indexOf(message), 1);

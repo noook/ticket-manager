@@ -67,7 +67,7 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("/tickets/{identifier}/message/{id}", name="delete-ticket-message")
+     * @Route("/tickets/{identifier}/message/{id}", name="delete-ticket-message", methods={"DELETE"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function deleteMessage($identifier, $id, Request $request, MessageRepository $messageRepository, TicketRepository $ticketRepository, ObjectManager $em)
@@ -88,6 +88,68 @@ class MessageController extends AbstractController
 
         return $this->json([
             'message' => ['id' => $id],
+        ]);
+    }
+
+    /**
+     * @Route("/tickets/{identifier}/message/{id}", name="ticket-message", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function getMessage($identifier, $id, Request $request, MessageRepository $messageRepository, TicketRepository $ticketRepository)
+    {
+        $user = $this->getUser();
+
+        $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
+
+        $message = $messageRepository->findOneBy([
+            'id' => $id,
+            'ticket' => $ticket,
+        ]);
+
+        return $this->json([
+            'message' => [
+                'id' => $message->getId(),
+                'author' => $message->getAuthor()->getUsername(),
+                'content' => $message->getContent(),
+                'posted' => $message->getCreatedAt()->format('c'),
+            ],
+            'ticket' => [
+                'title' => $ticket->getTitle(),
+            ],
+        ]);
+    }
+
+    /**
+     * @Route("/tickets/{identifier}/message/{id}", name="edit-ticket-message", methods={"PUT"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function editMessage($identifier, $id, Request $request, MessageRepository $messageRepository, TicketRepository $ticketRepository, ObjectManager $em)
+    {
+        $user = $this->getUser();
+
+        $data = json_decode($request->getContent(), true);
+        dump($data);
+
+        $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
+
+        $message = $messageRepository->findOneBy([
+            'id' => $id,
+            'ticket' => $ticket,
+        ]);
+
+        $message->setContent($data['text']);
+        $em->flush();
+
+        return $this->json([
+            'message' => [
+                'id' => $message->getId(),
+                'author' => $message->getAuthor()->getUsername(),
+                'content' => $message->getContent(),
+                'posted' => $message->getCreatedAt()->format('c'),
+            ],
+            'ticket' => [
+                'title' => $ticket->getTitle(),
+            ],
         ]);
     }
 }

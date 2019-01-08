@@ -14,7 +14,9 @@
     "CANCEL": "Cancel",
     "CONFIRM": "Confirm",
     "LOGOUT": "Logout",
+    "TICKET": "Ticket",
     "MY_TICKETS": "My tickets",
+    "MESSAGE_EDITION": "Message edition",
     "LIST_SHOW_CLOSED_TICKETS": "Show closed tickets",
     "LIST_SHOW_ASSIGNED_TICKETS": "Show assigned tickets",
     "ASSIGNED_TO_THIS": "Assigned",
@@ -39,5 +41,8 @@
     "TICKET_SUBJECT": "Subject",
     "ADD_A_MESSAGE": "Add a message",
     "TICKET_MESSAGE": "Message",
-    "SUBMIT_FORM": "Submit"
+    "MESSAGE_TO_EDIT": "Message to edit",
+    "EDIT_HERE": "Edit here",
+    "SUBMIT_FORM": "Submit",
+    "SAVE": "Save"
 }
