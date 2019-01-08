@@ -8,18 +8,37 @@
         {{ translations.ANSWER_POSTED_AT }} {{ message.posted | moment('DD/MM/YYYY HH:mm')}}
       </div>
     </div>
-    <div class="content">
+    <div class="content" :class="{'less-padding': $store.state.GRADE === 'admin'}">
       <p v-for="(paragraph, index) in message.content.split('\n')" :key="index">
         {{ paragraph }}
       </p>
+    </div>
+    <div class="footer" v-if="$store.state.GRADE === 'admin'">
+      <EditButton />
+      <TrashButton @click="deleteMessage"/>
     </div>
   </div>
 </template>
 
 <script>
+import TrashButton from '@/components/Input/TrashButton.vue';
+import EditButton from '@/components/Input/EditButton.vue';
+
 export default {
+  components: {
+    TrashButton,
+    EditButton,
+  },
   name: 'ThreadMessage',
   props: ['message'],
+  methods: {
+    deleteMessage() {
+      const ticketId = this.$parent.ticket.identifier;
+      this.$api.delete(`http://ticket-manager.ml/tickets/${ticketId}/message/${this.message.id}`)
+        .then(() => this.$emit('deleted'))
+        .catch(err => console.log(err)); // eslint-disable-line
+    },
+  },
 };
 </script>
 
@@ -44,6 +63,22 @@ export default {
     > .content {
       padding: 20px;
       text-align: left;
+
+      &.less-padding {
+        padding: 20px 20px 0;
+      }
+    }
+
+    > .footer {
+      padding: 0 20px 20px;
+      visibility: hidden;
+      @include d-flex-centered(flex-end);
+    }
+
+    &:hover {
+      > .footer {
+        visibility: visible;
+      }
     }
   }
 </style>

@@ -86,20 +86,24 @@ export default {
         font-size: 1rem;
       }
 
-      > div p {
-        padding: 2px 10px;
-        margin: 0 5px;
-        border-radius: 5px;
-        border: solid 1px rgba($flatBlack, .5);
+      > div {
+        display: flex;
 
-        > span {
-          margin-left: 10px;
-          color: $flatBlue;
-          // font-size: 1.2rem;
-          font-weight: bold;
+        > p {
+          padding: 2px 10px;
+          margin: 0 5px;
+          border-radius: 5px;
+          border: solid 1px rgba($flatBlack, .5);
 
-          &:hover {
-            cursor: pointer;
+          > span {
+            margin-left: 10px;
+            color: $flatBlue;
+            // font-size: 1.2rem;
+            font-weight: bold;
+
+            &:hover {
+              cursor: pointer;
+            }
           }
         }
       }

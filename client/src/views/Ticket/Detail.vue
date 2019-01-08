@@ -48,6 +48,7 @@
     <section class="thread">
       <Message
         v-for="(item, index) in messages"
+        @deleted="deleteMessage(item)"
         :key="index"
         :message="item"/>
     </section>
@@ -116,6 +117,9 @@ export default {
         })
         .catch(err => console.log(err)); // eslint-disable-line
       this.newMessage = '';
+    },
+    deleteMessage(message) {
+      this.messages.splice(this.messages.indexOf(message), 1);
     },
     async deleteParticipant() {
       const { participant } = await this.$api.delete(`http://ticket-manager.ml/tickets/${this.$route.params.id}/remove-participant`, {

@@ -141,6 +141,7 @@ class TicketController extends AbstractController
 
         foreach ($ticketMessages as $message) {
             $messages[] = [
+                'id' => $message->getId(),
                 'author' => $message->getAuthor()->getUsername(),
                 'content' => $message->getContent(),
                 'posted' => $message->getCreatedAt()->format('c'),
@@ -152,49 +153,6 @@ class TicketController extends AbstractController
             'messages' => $messages,
             'participants' => $participants,
         ]);
-    }
-
-    /**
-     * @Route("/tickets/{identifier}/new-message", name="new-ticket-message")
-     * @IsGranted("ROLE_USER")
-     */
-    public function newMessage($identifier, Request $request, TicketRepository $ticketRepository, ObjectManager $em)
-    {
-        $user = $this->getUser();
-        $content = json_decode($request->getContent(), true)['message'];
-
-        $message = new Message;
-        $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
-
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
-        $isParticipating = $ticket->getParticipants()->contains($user);
-        dump($isAdmin, $isParticipating);
-
-        $message
-            ->setAuthor($user)
-            ->setContent($content)
-            ->setTicket($ticket);
-
-        if ($isParticipating || $isAdmin) {
-            $ticket->setStatus('awaiting');
-        }
-
-        $em->persist($message);
-
-        $em->flush();
-
-        $message = [
-            'author' => $message->getAuthor()->getUsername(),
-            'content' => $message->getContent(),
-            'posted' => $message->getCreatedAt()->format('c'),
-        ];
-
-        return $this->json([
-            'message' => $message,
-            'ticket' => [
-                'status' => $ticket->getStatus(),
-            ],
-        ], 201);
     }
 
     /**
