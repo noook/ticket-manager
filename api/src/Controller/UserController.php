@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/users/search", name="user-search")
+     * @Route("/users/search", name="user-search", methods={"GET"})
      */
     public function index(Request $request, UserRepository $userRepository)
     {

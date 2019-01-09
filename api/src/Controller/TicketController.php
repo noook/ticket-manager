@@ -24,7 +24,7 @@ use App\Entity\Message;
 class TicketController extends AbstractController
 {
     /**
-     * @Route("/tickets", name="tickets")
+     * @Route("/tickets", name="tickets", methods={"GET"})
      * @IsGranted("ROLE_USER")
      */
     public function index(TicketRepository $ticketRepository)
@@ -109,7 +109,7 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("/tickets/new", name="new-ticket")
+     * @Route("/tickets/new", name="new-ticket", methods={"POST"})
      * @IsGranted("ROLE_USER")
      */
     public function new(Request $request, TicketHandler $ticketHandler, ObjectManager $em)
@@ -143,12 +143,11 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/tickets/{identifier}/delete", name="delete-ticket", methods={"DELETE"})
+     * @ParamConverter("ticket", class="App\Entity\Ticket", options={"mapping": {"identifier": "identifier"}})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function delete($identifier, Request $request, TicketRepository $ticketRepository, ObjectManager $em)
+    public function delete(Ticket $ticket, Request $request, ObjectManager $em)
     {
-        $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
-
         $em->remove($ticket);
         $em->flush();
 
@@ -156,7 +155,7 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("/tickets/{identifier}", name="ticket-detail")
+     * @Route("/tickets/{identifier}", name="ticket-detail", methods={"GET"})
      * @ParamConverter("ticket", class="App\Entity\Ticket", options={"mapping": {"identifier": "identifier"}})
      * @IsGranted("ROLE_USER")
      */
@@ -205,14 +204,14 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("/tickets/{identifier}/add-participant", name="new-ticket-participant")
+     * @Route("/tickets/{identifier}/add-participant", name="new-ticket-participant", methods={"POST"})
+     * @ParamConverter("ticket", class="App\Entity\Ticket", options={"mapping": {"identifier": "identifier"}})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function newParticipant($identifier, Request $request, UserRepository $userRepository, TicketRepository $ticketRepository, ObjectManager $em)
+    public function newParticipant(Ticket $ticket, Request $request, UserRepository $userRepository, ObjectManager $em)
     {
         $user = $this->getUser();
         $participantID = json_decode($request->getContent(), true)['participant'];
-        $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
         $participant = $userRepository->findOneBy(['id' => $participantID]);
         $ticket->addParticipant($participant);
 
@@ -224,13 +223,13 @@ class TicketController extends AbstractController
     }
     
     /**
-     * @Route("/tickets/{identifier}/remove-participant", name="remove-ticket-participant")
+     * @Route("/tickets/{identifier}/remove-participant", name="remove-ticket-participant", methods={"DELETE"})
+     * @ParamConverter("ticket", class="App\Entity\Ticket", options={"mapping": {"identifier": "identifier"}})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function removeParticipant($identifier, Request $request, UserRepository $userRepository, TicketRepository $ticketRepository, ObjectManager $em)
+    public function removeParticipant(Ticket $ticket, Request $request, UserRepository $userRepository, ObjectManager $em)
     {
         $username = json_decode($request->getContent(), true)['participant'];
-        $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
         $participant = $userRepository->findOneBy(['username' => $username]);
         $ticket->removeParticipant($participant);
 

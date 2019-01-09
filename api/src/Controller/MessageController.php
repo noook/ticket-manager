@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use App\Entity\Message;
 use App\Entity\Ticket;
@@ -18,16 +19,16 @@ use App\Repository\TicketRepository;
 class MessageController extends AbstractController
 {
     /**
-     * @Route("/tickets/{identifier}/new-message", name="new-ticket-message")
+     * @Route("/tickets/{identifier}/new-message", name="new-ticket-message", methods={"POST"})
+     * @ParamConverter("ticket", class="App\Entity\Ticket", options={"mapping": {"identifier": "identifier"}})
      * @IsGranted("ROLE_USER")
      */
-    public function newMessage($identifier, Request $request, TicketRepository $ticketRepository, ObjectManager $em)
+    public function newMessage(Ticket $ticket, Request $request, TicketRepository $ticketRepository, ObjectManager $em)
     {
         $user = $this->getUser();
         $content = json_decode($request->getContent(), true)['message'];
 
         $message = new Message;
-        $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
 
         $isAdmin = $this->isGranted('ROLE_ADMIN');
         $isParticipating = $ticket->getParticipants()->contains($user);
@@ -68,13 +69,12 @@ class MessageController extends AbstractController
 
     /**
      * @Route("/tickets/{identifier}/message/{id}", name="delete-ticket-message", methods={"DELETE"})
+     * @ParamConverter("ticket", class="App\Entity\Ticket", options={"mapping": {"identifier": "identifier"}})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function deleteMessage($identifier, $id, Request $request, MessageRepository $messageRepository, TicketRepository $ticketRepository, ObjectManager $em)
+    public function deleteMessage(Ticket $ticket, $id, Request $request, MessageRepository $messageRepository, TicketRepository $ticketRepository, ObjectManager $em)
     {
         $user = $this->getUser();
-
-        $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
 
         $message = $messageRepository->findOneBy([
             'id' => $id,
@@ -93,13 +93,12 @@ class MessageController extends AbstractController
 
     /**
      * @Route("/tickets/{identifier}/message/{id}", name="ticket-message", methods={"GET"})
+     * @ParamConverter("ticket", class="App\Entity\Ticket", options={"mapping": {"identifier": "identifier"}})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function getMessage($identifier, $id, Request $request, MessageRepository $messageRepository, TicketRepository $ticketRepository)
+    public function getMessage(Ticket $ticket, $id, Request $request, MessageRepository $messageRepository, TicketRepository $ticketRepository)
     {
         $user = $this->getUser();
-
-        $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
 
         $message = $messageRepository->findOneBy([
             'id' => $id,
@@ -121,15 +120,14 @@ class MessageController extends AbstractController
 
     /**
      * @Route("/tickets/{identifier}/message/{id}", name="edit-ticket-message", methods={"PUT"})
+     * @ParamConverter("ticket", class="App\Entity\Ticket", options={"mapping": {"identifier": "identifier"}})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function editMessage($identifier, $id, Request $request, MessageRepository $messageRepository, TicketRepository $ticketRepository, ObjectManager $em)
+    public function editMessage(Ticket $ticket, $id, Request $request, MessageRepository $messageRepository, TicketRepository $ticketRepository, ObjectManager $em)
     {
         $user = $this->getUser();
 
         $data = json_decode($request->getContent(), true);
-
-        $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
 
         $message = $messageRepository->findOneBy([
             'id' => $id,

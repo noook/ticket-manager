@@ -43,8 +43,6 @@ export function checkConnexion() {
       resolve();
     })
     .catch((err) => {
-      // Let debugger, logout does not automatically work when not using the app for more than 24h
-      debugger; // eslint-disable-line
       store.dispatch('logout');
       reject();
     }));

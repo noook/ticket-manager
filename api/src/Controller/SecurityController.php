@@ -18,7 +18,7 @@ use App\Security\UserProvider;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/register", name="register")
+     * @Route("/register", name="register", methods={"POST"})
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -72,7 +72,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/login", name="login")
+     * @Route("/login", name="login", methods={"POST"})
      */
     public function login(Request $request, UserProvider $userProvider,  UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -104,7 +104,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/user/check-connection", name="loggedInAs")
+     * @Route("/user/check-connection", name="loggedInAs", methods={"GET"})
      */
     public function loggedInAs(Request $request, UserProvider $userProvider, TokenAuthenticator $authenticator)
     {
