@@ -34,10 +34,11 @@ class TicketFixtures extends Fixture implements DependentFixtureInterface
 
         for ($i = 0; $i < count($titles); $i++) {
             $ticket = new Ticket();
-            $ticket->setTitle($titles[$i]);
-            $ticket->setAuthor($customer);
-            $ticket->setStatus("open");
-            $ticket->setIdentifier($this->ticketHandler->generate());
+            $ticket
+                ->setTitle($titles[$i])
+                ->setAuthor($customer)
+                ->setStatus("open")
+                ->setIdentifier($this->ticketHandler->generate());
             $manager->persist($ticket);
         }
 

@@ -35,10 +35,11 @@ class MessageFixtures extends Fixture implements DependentFixtureInterface
         $messages = [];
         
         $originMessage = new Message;
-        $originMessage->setTicket($ticket);
-        $originMessage->setAuthor($user);
-        $originMessage->setContent("Hello,\n Everytime I try to run a golang script it keeps telling me that my GOPATH isn't set, how can I solve this ?");
-        $originMessage->setCreatedAt($now);
+        $originMessage
+            ->setTicket($ticket)
+            ->setAuthor($user)
+            ->setContent("Hello,\n Everytime I try to run a golang script it keeps telling me that my GOPATH isn't set, how can I solve this ?")
+            ->setCreatedAt($now);
         $manager->persist($originMessage);
 
         $manager->flush(); // flush messages one by one otherwise all messages will have the same created at value
@@ -47,20 +48,22 @@ class MessageFixtures extends Fixture implements DependentFixtureInterface
 
         $later = $now->add(new \DateInterval('PT1H'));
         $secondMessage = new Message;
-        $secondMessage->setTicket($ticket);
-        $secondMessage->setAuthor($admin);
-        $secondMessage->setContent("Dear nook,\nHave you tried searching between your keyboard and your chair ? The problem might come from here.");
-        $secondMessage->setCreatedAt($later);
+        $secondMessage
+            ->setTicket($ticket)
+            ->setAuthor($admin)
+            ->setContent("Dear nook,\nHave you tried searching between your keyboard and your chair ? The problem might come from here.")
+            ->setCreatedAt($later);
         $manager->persist($secondMessage);
         
         $manager->flush();
 
         $later = $later->add(new \DateInterval('PT1H'));
         $thirdMessage = new Message;
-        $thirdMessage->setTicket($ticket);
-        $thirdMessage->setAuthor($user);
-        $thirdMessage->setContent("Oh yes indeed, I didn't read the manual nor the docs, I am very dumb thanks for figuring out what the problem was.");
-        $thirdMessage->setCreatedAt($later);
+        $thirdMessage
+            ->setTicket($ticket)
+            ->setAuthor($user)
+            ->setContent("Oh yes indeed, I didn't read the manual nor the docs, I am very dumb thanks for figuring out what the problem was.")
+            ->setCreatedAt($later);
         $manager->persist($thirdMessage);
 
         $ticket->setStatus('closed');
@@ -77,11 +80,32 @@ class MessageFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
 
         $ticket = $ticketManager->findOneBy(['title' => 'Oops, lost my password']);
+        $now = new \DateTime();
         $message = new Message;
         $message
             ->setAuthor($user)
             ->setContent('I know my password is "password" but when I type "12345678" it tells me my password is incorrect, why ?')
             ->setTicket($ticket);
+        $manager->persist($message);
+        $manager->flush();
+
+        $later = $now->add(new \DateInterval('PT1H'));
+        $message = new Message;
+        $message
+            ->setAuthor($admin)
+            ->setContent('Have you tried with the correct password ?')
+            ->setTicket($ticket)
+            ->setCreatedAt($later);
+        $manager->persist($message);
+        $manager->flush();
+
+        $later = $later->add(new \DateInterval('PT1H'));
+        $message = new Message;
+        $message
+            ->setAuthor($user)
+            ->setContent('No why, should I ?')
+            ->setTicket($ticket)
+            ->setCreatedAt($later);
         $manager->persist($message);
         $manager->flush();
     }
