@@ -36,6 +36,9 @@
           </td>
           <td>{{ item.updated | moment('DD-MM-YYYY') }}</td>
         </tr>
+        <tr class="no-ticket" v-if="!filteredList.length">
+          <td colspan="7">{{ translations.NO_TICKET_YET }}</td>
+        </tr>
       </table>
       <img src="@/assets/svg/loading.svg" alt="Loading" v-else>
     </div>
@@ -142,6 +145,10 @@ export default {
               background-color: #f2f2f2;
               cursor: pointer;
             }
+          }
+
+          &.no-ticket > td {
+            text-align: center;
           }
 
           > td {

@@ -54,7 +54,7 @@ export default {
     };
   },
   methods: {
-    register() {
+    async register() {
       for (const i in this.registerError) {
         this.registerError[i] = false;
       }
@@ -65,18 +65,20 @@ export default {
         passwordConfirmation,
       } = this.form;
 
-      axios.post('http://ticket-manager.ml/register', {
+      const { token, expiracy } = await axios.post('http://ticket-manager.ml/register', {
         username,
         email,
         password,
         passwordConfirmation,
       })
-        .then(({ data }) => console.log(data)) // eslint-disable-line
+        .then(({ data }) => data) // eslint-disable-line
         .catch((err) => {
           for (const i in err.response.data.errors) {
             this.registerError[i] = err.response.data.errors[i];
           }
         });
+      this.$store.dispatch('setToken', { token, expiracy });
+      this.$router.push('/tickets');
     },
   },
 };

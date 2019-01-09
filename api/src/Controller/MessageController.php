@@ -128,7 +128,6 @@ class MessageController extends AbstractController
         $user = $this->getUser();
 
         $data = json_decode($request->getContent(), true);
-        dump($data);
 
         $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
 

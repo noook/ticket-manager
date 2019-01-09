@@ -20,6 +20,7 @@
     "LIST_SHOW_CLOSED_TICKETS": "Show closed tickets",
     "LIST_SHOW_ASSIGNED_TICKETS": "Show assigned tickets",
     "ASSIGNED_TO_THIS": "Assigned",
+    "NO_TICKET_YET": "No ticket yet.",
     "TICKET_IDENTIFER": "ID",
     "TICKET_TITLE": "Title",
     "TICKET_STATUS": "Status",
