@@ -49,16 +49,23 @@
     <section class="thread" v-if="loaded">
       <div class="ticket-info">
         <h2>{{ ticket.title }}</h2>
-        <div class="actions">
+        <div class="actions" v-if="$store.state.GRADE === 'admin'">
           <div
             class="button green"
+            @click="updateStatus('open')"
             v-if="ticket.status === 'closed'">
             {{ translations.TICKET_ACTION_REOPEN }}
           </div>
           <div
             class="button red"
+            @click="updateStatus('closed')"
             v-if="ticket.status !== 'closed'">
             {{ translations.TICKET_ACTION_CLOSE }}
+          </div>
+          <div
+          @click="$router.push({ name: 'ticket-edit', params: { identifier: ticket.identifier }})"
+            class="button blue">
+            {{ translations.EDIT }}
           </div>
           <div
             @click="popups.deleteTicket = true"
@@ -159,6 +166,14 @@ export default {
           id: message.id,
         },
       });
+    },
+    async updateStatus(status) {
+      const { newStatus } = await this.$api.put(`http://ticket-manager.ml/tickets/${this.ticket.identifier}/status`, {
+        status,
+      })
+        .then(({ data }) => data)
+        .catch(err => console.log(err)); // eslint-disable-line
+      this.ticket.status = newStatus;
     },
     deleteTicket() {
       this.$api.delete(`http://ticket-manager.ml/tickets/${this.ticket.identifier}/delete`)
@@ -299,6 +314,10 @@ export default {
 
               &:hover {
                 cursor: pointer;
+              }
+
+              &.blue {
+                background-color: rgba($flatBlue, .9);
               }
 
               &.red {

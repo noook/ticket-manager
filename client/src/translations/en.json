@@ -16,6 +16,7 @@
     "LOGOUT": "Logout",
     "TICKET": "Ticket",
     "MY_TICKETS": "My tickets",
+    "TICKET_EDITION": "Ticket edition",
     "MESSAGE_EDITION": "Message edition",
     "LIST_SHOW_CLOSED_TICKETS": "Show closed tickets",
     "LIST_SHOW_ASSIGNED_TICKETS": "Show assigned tickets",
@@ -24,6 +25,7 @@
     "TICKET_ACTION": "Ticket actions",
     "TICKET_ACTION_REOPEN": "Reopen",
     "TICKET_ACTION_CLOSE": "Close",
+    "EDIT": "Edit",
     "DELETE": "Delete",
     "DELETE_THIS_TICKET": "Delete this ticket ?",
     "DELETE_THIS_MESSAGE": "Delete this message ?",
@@ -49,6 +51,7 @@
     "ADD_A_MESSAGE": "Add a message",
     "TICKET_MESSAGE": "Message",
     "MESSAGE_TO_EDIT": "Message to edit",
+    "EDIT_TITLE": "Edit title",
     "EDIT_HERE": "Edit here",
     "SUBMIT_FORM": "Submit",
     "SAVE": "Save"

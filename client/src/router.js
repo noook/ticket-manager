@@ -5,7 +5,9 @@ import Authentication from './views/Authentication.vue';
 import TicketsList from './views/Ticket/List.vue';
 import TicketsDetail from './views/Ticket/Detail.vue';
 import TicketCreation from './views/Ticket/Creation.vue';
+import TicketEdit from './views/Ticket/Edit.vue';
 import MessageEdit from './views/Message/Edit.vue';
+
 import { checkConnexion } from './utils/api';
 
 Vue.use(Router);
@@ -42,6 +44,11 @@ const router = new Router({
       path: '/tickets/:id',
       name: 'ticket-detail',
       component: TicketsDetail,
+    },
+    {
+      path: '/tickets/:identifier/edit',
+      name: 'ticket-edit',
+      component: TicketEdit,
     },
     {
       path: '/tickets/:identifier/message/edit/:id',

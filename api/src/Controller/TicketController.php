@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -76,6 +77,38 @@ class TicketController extends AbstractController
     }
 
     /**
+     * @Route("/tickets/{identifier}/status", name="ticket-status-update", methods={"PUT"})
+     * @ParamConverter("ticket", class="App\Entity\Ticket", options={"mapping": {"identifier": "identifier"}})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function setStatus(Ticket $ticket, Request $request, ObjectManager $em)
+    {
+        $status = json_decode($request->getContent(), true)['status'];
+        $ticket->setStatus($status);
+        $em->flush();
+
+        return $this->json([
+            'newStatus' => $ticket->getStatus(),
+        ]);
+    }
+
+    /**
+     * @Route("/tickets/{identifier}/edit", name="ticket-title-update", methods={"PUT"})
+     * @ParamConverter("ticket", class="App\Entity\Ticket", options={"mapping": {"identifier": "identifier"}})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function updateTitle(Ticket $ticket, Request $request, ObjectManager $em)
+    {
+        $content = json_decode($request->getContent(), true)['content'];
+        $ticket->setTitle($content);
+        $em->flush();
+
+        return $this->json([
+            'title' => $ticket->getTitle(),
+        ]);
+    }
+
+    /**
      * @Route("/tickets/new", name="new-ticket")
      * @IsGranted("ROLE_USER")
      */
@@ -124,11 +157,11 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/tickets/{identifier}", name="ticket-detail")
+     * @ParamConverter("ticket", class="App\Entity\Ticket", options={"mapping": {"identifier": "identifier"}})
      * @IsGranted("ROLE_USER")
      */
-    public function detail($identifier, TicketRepository $ticketRepository, LoggerInterface $logger, UserRepository $userRepository)
+    public function detail(Ticket $ticket, UserRepository $userRepository)
     {
-        $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
         $user = $this->getUser();
 
         $isOwner = $ticket->getAuthor()->getId() == $user->getId();
