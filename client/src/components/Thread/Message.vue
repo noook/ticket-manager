@@ -15,19 +15,31 @@
     </div>
     <div class="footer" v-if="$store.state.GRADE === 'admin' && identifier">
       <EditButton @click="editMessage"/>
-      <TrashButton @click="deleteMessage"/>
+      <TrashButton @click="popupOpen = true"/>
     </div>
+    <ConfirmPopup
+      :message="translations.DELETE_THIS_MESSAGE"
+      :open="popupOpen"
+      @confirm="deleteMessage"
+      @close="popupOpen = false"/>
   </div>
 </template>
 
 <script>
 import TrashButton from '@/components/Input/TrashButton.vue';
 import EditButton from '@/components/Input/EditButton.vue';
+import ConfirmPopup from '@/components/Popup/Confirm.vue';
 
 export default {
   components: {
     TrashButton,
     EditButton,
+    ConfirmPopup,
+  },
+  data() {
+    return {
+      popupOpen: false,
+    };
   },
   name: 'ThreadMessage',
   props: ['message', 'identifier'],

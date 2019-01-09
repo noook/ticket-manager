@@ -39,13 +39,39 @@
         </li>
         <ConfirmPopup
           :message="confirmMessage"
-          :open="popupOpen"
+          :open="popups.deleteParticipant"
           @confirm="deleteParticipant"
-          @close="popupOpen = false"/>
+          @close="popups.deleteParticipant = false"/>
       </ul>
     </div>
     <img src="@/assets/svg/loading.svg" alt="Loading" v-else>
-    <section class="thread">
+    <hr v-if="loaded">
+    <section class="thread" v-if="loaded">
+      <div class="ticket-info">
+        <h2>{{ ticket.title }}</h2>
+        <div class="actions">
+          <div
+            class="button green"
+            v-if="ticket.status === 'closed'">
+            {{ translations.TICKET_ACTION_REOPEN }}
+          </div>
+          <div
+            class="button red"
+            v-if="ticket.status !== 'closed'">
+            {{ translations.TICKET_ACTION_CLOSE }}
+          </div>
+          <div
+            @click="popups.deleteTicket = true"
+            class="button red">
+            {{ translations.DELETE }}
+          </div>
+          <ConfirmPopup
+            :message="translations.DELETE_THIS_TICKET"
+            :open="popups.deleteTicket"
+            @confirm="deleteTicket"
+            @close="popups.deleteTicket = false"/>
+        </div>
+      </div>
       <Message
         v-for="(item, index) in messages"
         @edit="editMessage(item)"
@@ -54,15 +80,17 @@
         :identifier="ticket.identifier"
         :message="item"/>
     </section>
-    <section class="new-message" v-if="loaded" v-show="ticket.status != 'closed'">
-      <h2>{{ translations.ADD_A_MESSAGE }}:</h2>
-      <form @submit.prevent="submitMessage">
-        <textarea v-model="newMessage"></textarea>
-        <button
-          type="submit"
-          :class="{ disabled: !newMessage.length }"
-          :disabled="!newMessage.length">{{ translations.SUBMIT_FORM }}</button>
-      </form>
+    <section class="actions" v-if="loaded" v-show="ticket.status != 'closed'">
+      <div class="new-message">
+        <h2>{{ translations.ADD_A_MESSAGE }}:</h2>
+        <form @submit.prevent="submitMessage">
+          <textarea v-model="newMessage"></textarea>
+          <button
+            type="submit"
+            :class="{ disabled: !newMessage.length }"
+            :disabled="!newMessage.length">{{ translations.SUBMIT_FORM }}</button>
+        </form>
+      </div>
     </section>
   </div>
 </template>
@@ -93,7 +121,10 @@ export default {
       messages: [],
       participants: [],
       newMessage: '',
-      popupOpen: false,
+      popups: {
+        deleteParticipant: false,
+        deleteTicket: false,
+      },
       confirmMessage: '',
       toDelete: null,
     };
@@ -102,7 +133,7 @@ export default {
     confirmParticipantDelete(username) {
       this.confirmMessage = this.translations.params('CONFIRM_PARTICIPANT_DELETION', { username });
       this.toDelete = username;
-      this.popupOpen = true;
+      this.popups.deleteParticipant = true;
     },
     fetchTicket() {
       return this.$api.get(`http://ticket-manager.ml/tickets/${this.$route.params.id}`)
@@ -129,6 +160,11 @@ export default {
         },
       });
     },
+    deleteTicket() {
+      this.$api.delete(`http://ticket-manager.ml/tickets/${this.ticket.identifier}/delete`)
+        .then(() => this.$router.push({ name: 'tickets' }))
+        .catch(err => console.log(err)); // eslint-disable-line
+    },
     deleteMessage(message) {
       this.messages.splice(this.messages.indexOf(message), 1);
     },
@@ -142,7 +178,7 @@ export default {
         .catch(err => console.log(err)); // eslint-disable-line
 
       this.participants.splice(this.participants.indexOf(participant), 1);
-      this.popupOpen = false;
+      this.popups.deleteParticipant = false;
     },
   },
   computed: {
@@ -157,7 +193,7 @@ export default {
 <style lang="scss" scoped>
   .ticket-detail {
     width: 60%;
-    margin: auto;
+    margin: 0 auto 50px;
 
     > h1 {
       font-size: 2rem;
@@ -236,43 +272,121 @@ export default {
       }
     }
 
+    > hr {
+      margin: 30px 0;
+      border: none;
+      border-bottom: solid 1px rgba($flatBlack, .2);
+      height: 0px;
+    }
+
     > section {
-      &.new-message {
-        text-align: left;
+      &.thread {
+        div.ticket-info {
+          @include d-flex-centered(space-between);
 
-        > h2 {
-          font-size: 1.5rem;
-        }
-
-        > form {
-          width: 50%;
-
-          > textarea {
-            display: block;
-            margin: 15px 0;
-            width: 100%;
-            border-radius: 5px;
-            min-height: 100px;
-            box-sizing: border-box;
-            padding: 10px;
-            outline: none;
-            resize: none;
-            font-family: $defaultFont;
-            border: solid 1px rgba($flatBlack, .5);
+          > h2 {
+            font-size: 1.8rem;
+            text-align: left;
           }
 
-          > button {
-            all: inherit;
-            width: auto;
-            display: block;
-            padding: 5px 10px;
-            background-color: $flatGreen;
-            border-radius: 5px;
-            outline: none;
-            color: #fff;
+          > .actions {
+            display: flex;
 
-            &.disabled {
-              background-color: rgba($flatBlack, .2);
+            > .button {
+              border-radius: 5px;
+              padding: 5px 10px;
+              color: #fff;
+
+              &:hover {
+                cursor: pointer;
+              }
+
+              &.red {
+                background-color: rgba($flatRed, .9);
+              }
+
+              &.green {
+                background-color: rgba($flatGreen, .9);
+              }
+
+              &:not(:first-child) {
+                margin-left: 10px;
+              }
+            }
+          }
+        }
+      }
+
+      &.actions {
+        display: flex;
+
+        > div {
+          margin-right: 15px;
+        }
+        > .new-message {
+          text-align: left;
+
+          > h2 {
+            font-size: 1.5rem;
+          }
+
+          > form {
+            width: 100%;
+
+            > textarea {
+              display: block;
+              margin: 15px 0;
+              width: 400px;
+              border-radius: 5px;
+              min-height: 100px;
+              box-sizing: border-box;
+              padding: 10px;
+              outline: none;
+              resize: none;
+              font-family: $defaultFont;
+              border: solid 1px rgba($flatBlack, .5);
+            }
+
+            > button {
+              all: inherit;
+              width: auto;
+              display: block;
+              padding: 5px 10px;
+              background-color: $flatGreen;
+              border-radius: 5px;
+              outline: none;
+              color: #fff;
+
+              &.disabled {
+                background-color: rgba($flatBlack, .2);
+              }
+            }
+          }
+        }
+
+        > .ticket-actions {
+          > h2 {
+            font-size: 1.5rem;
+          }
+
+          > .buttons {
+            display: flex;
+            padding: 5px;
+
+            > .button {
+              border-radius: 5px;
+              flex: 1 0 0;
+              padding: 5px 10px;
+              color: #fff;
+              margin: 5px;
+
+              &.green {
+                background-color: rgba($flatGreen, .9);
+              }
+
+              &.red {
+                background-color: rgba($flatRed, .9);
+              }
             }
           }
         }

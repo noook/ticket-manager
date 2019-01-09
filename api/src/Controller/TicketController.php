@@ -38,6 +38,7 @@ class TicketController extends AbstractController
 
         $tickets = [];
         foreach ($user->getParticipatingTo() as $ticket) {
+            $latestMessage = array_reverse($ticket->getMessages()->toArray())[0];
             $tickets[] = [
                 'identifier' => $ticket->getIdentifier(),
                 'assigned' => true,
@@ -45,19 +46,20 @@ class TicketController extends AbstractController
                 'author' => $ticket->getAuthor()->getUsername(),
                 'status' => $ticket->getStatus(),
                 'created' => $ticket->getCreatedAt()->format('c'),
-                'updated' => $ticket->getUpdatedAt()->format('c'),
+                'updated' => $latestMessage->getCreatedAt()->format('c'),
             ];
         }
 
         foreach ($userTickets as $ticket) {
             if (array_search($ticket->getIdentifier(), array_column($tickets, 'identifier')) === false) {
+                $latestMessage = array_reverse($ticket->getMessages()->toArray())[0];
                 $tickets[] = [
                     'identifier' => $ticket->getIdentifier(),
                     'title' => $ticket->getTitle(),
                     'author' => $ticket->getAuthor()->getUsername(),
                     'status' => $ticket->getStatus(),
                     'created' => $ticket->getCreatedAt()->format('c'),
-                    'updated' => $ticket->getUpdatedAt()->format('c'),
+                    'updated' => $latestMessage->getCreatedAt()->format('c'),
                 ];
             }
         }
@@ -104,6 +106,20 @@ class TicketController extends AbstractController
         return $this->json([
             'identifier' => $ticket->getIdentifier(),
         ], 201);
+    }
+
+    /**
+     * @Route("/tickets/{identifier}/delete", name="delete-ticket", methods={"DELETE"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function delete($identifier, Request $request, TicketRepository $ticketRepository, ObjectManager $em)
+    {
+        $ticket = $ticketRepository->findOneBy(['identifier' => $identifier]);
+
+        $em->remove($ticket);
+        $em->flush();
+
+        return $this->json([], 205);
     }
 
     /**

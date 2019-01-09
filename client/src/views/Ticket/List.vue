@@ -22,7 +22,7 @@
           v-for="(item, index) in filteredList"
           :key="index"
           @click="$router.push({ name: 'ticket-detail', params: { id: item.identifier }})">
-          <td>
+          <td class="identifier">
             #{{ item.identifier }}
             <span class="ticket-assigned" v-if="item.assigned">
               {{ translations.ASSIGNED_TO_THIS }}
@@ -34,7 +34,7 @@
             <span :class="item.status">•</span>
             {{ translations[`TICKET_STATUS_SHORT_${item.status.toUpperCase()}`] }}
           </td>
-          <td>{{ item.updated | moment('DD-MM-YYYY') }}</td>
+          <td>{{ item.updated | moment('DD-MM-YYYY HH:mm:ss') }}</td>
         </tr>
         <tr class="no-ticket" v-if="!filteredList.length">
           <td colspan="7">{{ translations.NO_TICKET_YET }}</td>
@@ -105,6 +105,10 @@ export default {
 
         td {
           padding: 10px 20px;
+
+          &.identifier {
+            @include d-flex-centered(space-between);
+          }
 
           > span.ticket-assigned {
             margin-left: 10px;
