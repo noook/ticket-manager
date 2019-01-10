@@ -1,0 +1,19 @@
+{
+  "name": "tickr",
+  "version": "1.0.0",
+  "description": "A simple ticket manager",
+  "scripts": {
+    "deploy": "ssh root@server.neilrichter.com 'source ~/.zshrc; cd /var/www/nook/tickr; git pull origin master; cd client; npm i; npm run build; cd ../api; composer install'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/noook/ticket-manager.git"
+  },
+  "author": "nook",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/noook/ticket-manager/issues"
+  },
+  "homepage": "https://github.com/noook/ticket-manager#readme"
+}
