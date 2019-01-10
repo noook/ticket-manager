@@ -25,11 +25,13 @@
     "TICKET_ACTION": "Ticket actions",
     "TICKET_ACTION_REOPEN": "Reopen",
     "TICKET_ACTION_CLOSE": "Close",
+    "MANAGE": "Manage",
+    "USERS": "Users",
     "EDIT": "Edit",
     "DELETE": "Delete",
     "DELETE_THIS_TICKET": "Delete this ticket ?",
     "DELETE_THIS_MESSAGE": "Delete this message ?",
-    "TICKET_IDENTIFER": "ID",
+    "TICKET_IDENTIFIER": "ID",
     "TICKET_TITLE": "Title",
     "TICKET_STATUS": "Status",
     "TICKET_LAST_UPDATE": "Last update",
@@ -54,5 +56,7 @@
     "EDIT_TITLE": "Edit title",
     "EDIT_HERE": "Edit here",
     "SUBMIT_FORM": "Submit",
-    "SAVE": "Save"
+    "SAVE": "Save",
+    "SAVED": "Saved",
+    "ROLE_ADMIN": "Admin"
 }

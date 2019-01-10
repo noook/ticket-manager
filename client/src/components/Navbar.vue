@@ -4,6 +4,9 @@
     <router-link v-if="!loggedAs" to="/register">{{ translations.REGISTER }}</router-link>
     <router-link v-if="!loggedAs" to="/login">{{ translations.LOGIN }}</router-link>
     <router-link v-if="loggedAs" to="/tickets">{{ translations.MY_TICKETS }}</router-link>
+    <router-link
+      v-if="loggedAs && $store.state.GRADE === 'admin'"
+      to="/admin/users">{{ translations.MANAGE }}</router-link>
     <p v-if="loggedAs">{{ loggedAs }}</p>
     <a @click="logout" v-if="loggedAs">{{ translations.LOGOUT }}</a>
   </div>

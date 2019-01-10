@@ -8,6 +8,8 @@ import TicketCreation from './views/Ticket/Creation.vue';
 import TicketEdit from './views/Ticket/Edit.vue';
 import MessageEdit from './views/Message/Edit.vue';
 
+import AdminUserList from './views/Admin/Users/List.vue';
+
 import { checkConnexion } from './utils/api';
 
 Vue.use(Router);
@@ -54,6 +56,11 @@ const router = new Router({
       path: '/tickets/:identifier/message/edit/:id',
       name: 'message-edit',
       component: MessageEdit,
+    },
+    {
+      path: '/admin/users/',
+      name: 'admin-users-list',
+      component: AdminUserList,
     },
   ],
 });

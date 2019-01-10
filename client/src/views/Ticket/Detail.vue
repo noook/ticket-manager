@@ -3,7 +3,7 @@
     <h1>{{ translations.REQUEST_STATUS }}</h1>
     <div class="summary" v-if="loaded">
       <div class="group">
-        {{ translations.TICKET_IDENTIFER }}:
+        {{ translations.TICKET_IDENTIFIER }}:
         <a href="#">{{ ticket.identifier }}</a>
       </div>
       <div class="group">

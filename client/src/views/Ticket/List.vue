@@ -12,7 +12,7 @@
           </td>
         </thead>
         <thead>
-          <td>{{ translations.TICKET_IDENTIFER }}</td>
+          <td>{{ translations.TICKET_IDENTIFIER }}</td>
           <td>{{ translations.TICKET_AUTHOR }}</td>
           <td>{{ translations.TICKET_TITLE }}</td>
           <td>{{ translations.TICKET_STATUS }}</td>
