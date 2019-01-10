@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     fetchTickets() {
-      return this.$api.get('http://ticket-manager.ml/tickets')
+      return this.$api.get('/tickets')
         .then(response => response.data)
         .catch(err => console.log(err)); // eslint-disable-line
     },

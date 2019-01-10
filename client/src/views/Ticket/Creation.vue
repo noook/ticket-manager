@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     submitTicket() {
-      this.$api.post('http://ticket-manager.ml/tickets/new', {
+      this.$api.post('/tickets/new', {
         subject: this.subject,
         content: this.content,
       })

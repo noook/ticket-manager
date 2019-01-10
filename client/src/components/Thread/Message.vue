@@ -45,7 +45,7 @@ export default {
   props: ['message', 'identifier'],
   methods: {
     deleteMessage() {
-      this.$api.delete(`http://ticket-manager.ml/tickets/${this.identifier}/message/${this.message.id}`)
+      this.$api.delete(`/tickets/${this.identifier}/message/${this.message.id}`)
         .then(() => this.$emit('deleted'))
         .catch(err => console.log(err)); // eslint-disable-line
     },

@@ -3,7 +3,11 @@
 import store from '@/store';
 import axios from 'axios';
 
-const api = axios.create();
+const baseURL = process.env.NODE_ENV === 'development' ? 'http://ticket-manager.ml' : 'https://api.tickr.nook.sh';
+const api = axios.create({
+  baseURL,
+});
+
 api.interceptors.request.use(
   (config) => {
     const token = store.state.AUTH_TOKEN || null;
@@ -27,7 +31,7 @@ api.interceptors.response.use(
 export default api;
 
 export function checkConnexion() {
-  return new Promise((resolve, reject) => api.get('http://ticket-manager.ml/user/check-connection', {
+  return new Promise((resolve, reject) => api.get('/user/check-connection', {
     headers: {
       'X-AUTH-TOKEN': store.state.AUTH_TOKEN || null,
     },

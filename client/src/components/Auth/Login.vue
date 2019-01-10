@@ -42,7 +42,8 @@ export default {
     async login() {
       this.loginError = false;
       const { username, password } = this.form;
-      const { token, expiracy } = await axios.post('http://ticket-manager.ml/login', {
+      const baseUrl = process.env.NODE_ENV === 'development' ? 'http://ticket-manager.ml' : 'https://api.tickr.nook.sh';
+      const { token, expiracy } = await axios.post(`${baseUrl}/login`, {
         username,
         password,
       })

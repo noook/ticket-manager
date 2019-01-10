@@ -143,12 +143,12 @@ export default {
       this.popups.deleteParticipant = true;
     },
     fetchTicket() {
-      return this.$api.get(`http://ticket-manager.ml/tickets/${this.$route.params.id}`)
+      return this.$api.get(`/tickets/${this.$route.params.id}`)
         .then(response => response.data)
         .catch(err => console.log(err)); // eslint-disable-line
     },
     async submitMessage() {
-      await this.$api.post(`http://ticket-manager.ml/tickets/${this.$route.params.id}/new-message`, {
+      await this.$api.post(`/tickets/${this.$route.params.id}/new-message`, {
         message: this.newMessage,
       })
         .then(({ data }) => {
@@ -168,7 +168,7 @@ export default {
       });
     },
     async updateStatus(status) {
-      const { newStatus } = await this.$api.put(`http://ticket-manager.ml/tickets/${this.ticket.identifier}/status`, {
+      const { newStatus } = await this.$api.put(`/tickets/${this.ticket.identifier}/status`, {
         status,
       })
         .then(({ data }) => data)
@@ -176,7 +176,7 @@ export default {
       this.ticket.status = newStatus;
     },
     deleteTicket() {
-      this.$api.delete(`http://ticket-manager.ml/tickets/${this.ticket.identifier}/delete`)
+      this.$api.delete(`/tickets/${this.ticket.identifier}/delete`)
         .then(() => this.$router.push({ name: 'tickets' }))
         .catch(err => console.log(err)); // eslint-disable-line
     },
@@ -184,7 +184,7 @@ export default {
       this.messages.splice(this.messages.indexOf(message), 1);
     },
     async deleteParticipant() {
-      const { participant } = await this.$api.delete(`http://ticket-manager.ml/tickets/${this.$route.params.id}/remove-participant`, {
+      const { participant } = await this.$api.delete(`/tickets/${this.$route.params.id}/remove-participant`, {
         data: {
           participant: this.toDelete,
         },

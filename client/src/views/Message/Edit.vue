@@ -54,13 +54,13 @@ export default {
   methods: {
     fetchMessageInfos() {
       const { identifier, id } = this.$route.params;
-      return this.$api.get(`http://ticket-manager.ml/tickets/${identifier}/message/${id}`)
+      return this.$api.get(`/tickets/${identifier}/message/${id}`)
         .then(({ data }) => data)
         .catch(err => console.log(err)); // eslint-disable-line
     },
     editMessage() {
       const { identifier, id } = this.$route.params;
-      this.$api.put(`http://ticket-manager.ml/tickets/${identifier}/message/${id}`, {
+      this.$api.put(`/tickets/${identifier}/message/${id}`, {
         text: this.editedText,
       })
         .then(() => {

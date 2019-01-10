@@ -21,7 +21,7 @@
 export default {
   name: 'TicketEdit',
   async created() {
-    const { ticket } = await this.$api.get(`http://ticket-manager.ml/tickets/${this.$route.params.identifier}`)
+    const { ticket } = await this.$api.get(`/tickets/${this.$route.params.identifier}`)
       .then(({ data }) => data)
       .catch(err => console.log(err)); // eslint-disable-line
     this.ticket = ticket;
@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     updateTitle() {
-      this.$api.put(`http://ticket-manager.ml/tickets/${this.ticket.identifier}/edit`, {
+      this.$api.put(`/tickets/${this.ticket.identifier}/edit`, {
         content: this.toEdit,
       })
         .then(() => this.$router.push({

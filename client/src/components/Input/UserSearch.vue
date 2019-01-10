@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     async searchUser() {
-      let queryResults = await this.$api.get('http://ticket-manager.ml/users/search', {
+      let queryResults = await this.$api.get('/users/search', {
         params: {
           query: this.query,
         },
@@ -46,7 +46,7 @@ export default {
       this.queryResults = queryResults;
     },
     async addParticipant(id) {
-      const { participant } = await this.$api.post(`http://ticket-manager.ml/tickets/${this.$parent.$route.params.id}/add-participant`, {
+      const { participant } = await this.$api.post(`/tickets/${this.$parent.$route.params.id}/add-participant`, {
         participant: id,
       })
         .then(response => response.data)
